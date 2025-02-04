@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --leva-sizes-rootWidth: 340px;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  background-color: black;
+  background-image: linear-gradient(0deg, #aaa7a7 40%, #463889 90%); 
+}
+/* .startingbody{
+   background-image: linear-gradient(0deg, #aaa7a7 40%, #463889 90%); 
+} */
+
+.template-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  background-color: #4a208a;
+  color: white;
+  border-radius: 50px;
+  width: auto; /* Default width */
+}
+
+/* Style for Canvas */
+.canvas-overlay {
+  position: relative;
+  z-index: 2000000;  /* Set higher z-index to appear on top of the gradient */
+}
+
+.loading-page {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: #191654;
+}
+
+#Flat {
+  height: 150px;
+  width: 700px;
+  stroke: white;
+  fill-opacity: 0;
+  stroke-width: 3px;
+  stroke-dasharray: 4500;
+  animation: draw 15s ease;
+}
+
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 4500;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.name-container {
+  margin-top: 20px;
+  height: 50px;
+  overflow: hidden;
+}
+
+.logo-name {
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  margin-left: 20px;
+  font-weight: bold;
+}
+

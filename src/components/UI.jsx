@@ -1,0 +1,155 @@
+import { useRef, useState, useEffect } from "react"; // Import useEffect
+import { useChat } from "../hooks/useChat";
+
+export const UI = ({ hidden, ...props }) => {
+  const input = useRef();
+  const { chat, loading, message, error } = useChat();
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
+  useEffect(() => {
+    if (error) {
+      setIsErrorVisible(true);
+      const timer = setTimeout(() => {
+        setIsErrorVisible(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const sendMessage = () => {
+    const text = input.current.value;
+    if (!loading && !message) {
+      chat(text);
+      input.current.value = "";
+    }
+  };
+
+  const templateMessages = [
+    { text: "Do you judge me?", type: "lifechoices" },
+    { text: "How to do life?", type: "overwhelming" }, //how do u keep going
+    { text: "I am so done.", type: "sad" },
+  ];
+
+  const handleTemplateClick = (messageType) => {
+    if (!loading && !message) {
+      chat("", messageType);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex flex-col justify-between p-6 z-10 pointer-events-none">
+    {/* Responsive Logo */}
+    <div className=" absolute top-4 py-4 lg:py-1 md:top-5 ml-6 sm:top-3 flex items-center">
+      <img
+        src="/logosaas.png"
+        alt="SaaS Logo"
+        className="w-16 h-16 md:w-28 md:h-28 xl:w-20 xl:h-20 shadow-md transition-all duration-300 
+                   hover:scale-110 hover:shadow-lg rounded-full"
+      />
+      <span className="md:ml-5  mt-1 ml-5 font-sans font-extrabold text-white text-3xl md:text-4xl ">
+        Zoe AI
+      </span>
+    </div>
+  
+  
+      {/* Question mark button */}
+      {/* Question mark button */}
+      <div
+      className="absolute sm:mt-2 top-10 right-10 cursor-pointer rounded-full"
+      style={{ backgroundColor: "#1a1a1a", zIndex: 2147483647, pointerEvents: "auto" }}
+    >
+      {/* Button */}
+      <button
+        className="relative hidden md:block overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+        onClick={toggleVisibility}
+      >
+        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 text-white backdrop-blur-3xl px-6 py-4 text-xl font-bold md:px-6 md:py-4 xl:px-7 xl:py-4 md:text-2xl xl:text-xl">
+          ?
+        </span>
+      </button>
+
+      {/* Pop-up Box (Visible on Click) */}
+      {isVisible && (
+        <div
+          className="absolute top-16 text-sm md:text-lg lg:text-lg right-2 w-64 p-4 bg-gray-600 text-white rounded-md shadow-lg"
+          style={{
+            transition: "opacity 0.3s ease-in-out",
+            backgroundColor: "#1a1a1a",
+          }}
+        >
+          <p>You can talk to Zoe about anything, she gives the best advice!</p>
+        </div>
+      )}
+    </div>
+
+
+      {/* Template Message Buttons */}
+      <div
+  style={{
+    position: "absolute",
+    bottom: "6.5rem",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "1rem",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    pointerEvents: "auto",
+  }}
+>
+  {templateMessages.map((msg, index) => (
+    <button
+      key={index}
+      onClick={() => handleTemplateClick(msg.type)}
+      className="lg:mb-4 xl:mb-0 -mb-2  relative inline-flex h-18 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+    >
+      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+      <span className="mb-1  inline-flex font-sans font-medium h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-300 px-5 py-2 md:px-10 md:py-4 lg:px-8 lg:py-5 md:text-xl xl:px-7 xl:py-3  text-black backdrop-blur-3xl">
+        {msg.text}
+      </span>
+    </button>
+  ))}
+</div>
+
+      
+    <div className="mb-2 md:mb-0 absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-2  p-1   bg-[#1a1a1a] rounded-full shadow-lg border border-[#333] pointer-events-auto w-[90%] max-w-[800px]">
+
+  {/* Input Field */}
+  <input
+    className="flex-1 bg-transparent border-none text-white text-base sm:text-md md:text-xl pl-7 outline-none"
+    placeholder="Hey, what's up..."
+    ref={input}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") sendMessage();
+    }}
+  />
+
+  {/* Button */}
+  <button
+    disabled={loading || message}
+    onClick={sendMessage}
+    className="relative md:h-16 lg:h-20 xl:h-16 h-16 w-[30%] sm:w-[40%] md:w-[25%] max-w-[180px] 
+    overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 
+    focus:ring-offset-2 focus:ring-offset-slate-50"
+  >
+    <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] 
+    bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+
+    <span className="inline-flex h-full w-full cursor-pointer items-center justify-center 
+    rounded-full bg-slate-950 px-4 py-2 text-lg  md:text-xl  font-medium text-white backdrop-blur-3xl">
+      {loading || message ? "Sending..." : "Send"}
+    </span>
+  </button>
+</div>
+
+    </div>
+  );
+};

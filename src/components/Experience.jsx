@@ -1,0 +1,111 @@
+import {
+  CameraControls,
+  ContactShadows,
+  Environment,
+  Text,
+  OrbitControls,
+  Sparkles
+} from "@react-three/drei";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useChat } from "../hooks/useChat";
+import { Model } from "./Model";
+import { ClipLoader } from 'react-spinners';
+
+const Dots = (props) => {
+  const { loading } = useChat();
+  const [loadingText, setLoadingText] = useState("");
+  useEffect(() => {
+    if (loading) {
+      const interval = setInterval(() => {
+        setLoadingText((loadingText) => {
+          if (loadingText.length > 2) {
+            return ".";
+          }
+          return loadingText + ".";
+        });
+      }, 800);
+      return () => clearInterval(interval);
+    } else {
+      setLoadingText("");
+    }
+  }, [loading]);
+  if (!loading) return null;
+  return (
+    <group {...props}>
+      <Text fontSize={0.14} anchorX={"left"} anchorY={"bottom"}>
+        {loadingText}
+        <meshBasicMaterial attach="material" color="black" />
+      </Text>
+    </group>
+  );
+};
+
+export const Experience = () => {
+  const cameraControls = useRef();
+  const { cameraZoomed } = useChat();
+
+  useEffect(() => {
+    // Increased Z value for a more zoomed-out default view
+    cameraControls.current.setLookAt(0, 3, 7, 0, 2, 0);
+  }, []);
+  
+  useEffect(() => {
+    if (cameraZoomed) {
+      // Slight zoom-in for focus
+      cameraControls.current.setLookAt(0, 1.5, 2, 0, 1.5, 0, true);
+    } else {
+      // Further zoomed-out view for better scene visibility
+      cameraControls.current.setLookAt(0, 3, 8, 0, 2, 0, true);
+    }
+  }, [cameraZoomed]);
+
+  const [fontSize, setFontSize] = useState(1.5); // Default font size
+
+  useEffect(() => {
+    // Function to update font size based on screen width
+    const updateFontSize = () => {
+      const width = window.innerWidth;
+
+      if (width < 640) {
+        setFontSize(1);  // Smaller font for smaller screens
+      } else if (width < 768) {
+        setFontSize(1.2); // Medium font size for medium screens
+      } else {
+        setFontSize(1.5); // Default font size for larger screens
+      }
+    };
+
+    // Initial check
+    updateFontSize();
+
+    // Event listener to check for screen resize
+    window.addEventListener("resize", updateFontSize);
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener("resize", updateFontSize);
+  }, []);
+  
+  return (
+    <>
+      <CameraControls ref={cameraControls}
+        minDistance={1.5}  // Allows closer zoom but not too close
+        maxDistance={4}   // Allows more zooming out
+        smoothTime={0.5}   // Smooth movement
+        zoomSpeed={1.2}    // Slightly faster zooming
+        maxPolarAngle={Math.PI / 2.1} // Limit vertical rotation (reduce extreme up/down view)
+        minPolarAngle={Math.PI / 2.1}
+        minAzimuthAngle={-0.1} // Limit left horizontal rotation
+        maxAzimuthAngle={0.1}
+         />
+      <Environment preset="sunset" />
+
+      {/* Wrapping Dots into Suspense to prevent Blink when Troika/Font is loaded */}
+      <Suspense>
+        <Dots position-y={1.75} position-x={-0.02} />
+      </Suspense>
+      <Sparkles count={1000} size={10} position={[-10, 1, 0]} scale={[100,100,100]} speed={0.9} />
+      <Model />
+      <ContactShadows opacity={0.7} />
+    </>
+  );
+};
