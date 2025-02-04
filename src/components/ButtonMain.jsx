@@ -11,17 +11,15 @@ const ButtonMain = ({ isDarkMode, setIsDarkMode, onToggleBackground }) => {
   }, [isDarkMode]); // Runs when isDarkMode changes
 
   return (
-    <div className="absolute  right-0 md:right-20  cursor-pointer rounded-full group">
+    <div className="absolute right-6 top-5 md:top-6 lg:top-12 lg:right-10 xl:top-16 overflow-hidden  cursor-pointer rounded-full group">
      <div
-        className="absolute -mt-1 md:mt-2 top-10 right-10 cursor-pointer rounded-full group "
+        className="  top-4  cursor-pointer rounded-full group "
         style={{ backgroundColor: "#1a1a1a", zIndex: "2147483647", pointerEvents: "auto" }}
         >
       <button
-        className="relative inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+        className=" w-12 h-12 xl:h-14 xl:w-14 inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
         onClick={onToggleBackground}
         style={{
-          width: "65px",
-          height: "65px",
           position: "relative",
           backgroundColor: "transparent",
           display: "flex",
@@ -30,7 +28,7 @@ const ButtonMain = ({ isDarkMode, setIsDarkMode, onToggleBackground }) => {
         }}
       >
     <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-    <span ref={ref} className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full   backdrop-blur-3xl">
+    <span ref={ref} className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full font-bold md:px-6 md:py-4 xl:px-7 xl:py-4  backdrop-blur-3xl">
   
 
         {/* Toggle Icon (Dark Mode Switch) */}

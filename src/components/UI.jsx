@@ -42,16 +42,16 @@ export const UI = ({ hidden, ...props }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex flex-col justify-between p-6 z-10 pointer-events-none">
+    <div className="fixed inset-0 flex justify-between pointer-events-none">
     {/* Responsive Logo */}
-    <div className=" absolute top-4 py-4 lg:py-1 md:top-5 ml-6 sm:top-3 flex items-center">
+    <div className=" absolute top-4 py-1 lg:py-1 md:top-5 ml-6 lg:mt-6 lg:ml-16 flex items-center">
       <img
         src="/logosaas.png"
         alt="SaaS Logo"
-        className="w-16 h-16 md:w-28 md:h-28 xl:w-20 xl:h-20 shadow-md transition-all duration-300 
+        className="w-12 h-12  xl:w-20 xl:h-20 shadow-md transition-all duration-300 
                    hover:scale-110 hover:shadow-lg rounded-full"
       />
-      <span className="md:ml-5  mt-1 ml-5 font-sans font-extrabold text-white text-3xl md:text-4xl ">
+      <span className="md:ml-5  mt-1 ml-3 font-sans font-extrabold text-white text-2xl md:text-3xl ">
         Zoe AI
       </span>
     </div>
@@ -60,16 +60,17 @@ export const UI = ({ hidden, ...props }) => {
       {/* Question mark button */}
       {/* Question mark button */}
       <div
-      className="absolute sm:mt-2 top-10 right-10 cursor-pointer rounded-full"
+      className="absolute sm:mt-2  top-10 right-10 md:right-20 md:top-4 lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
       style={{ backgroundColor: "#1a1a1a", zIndex: 2147483647, pointerEvents: "auto" }}
-    >
+      >
+
       {/* Button */}
       <button
         className="relative hidden md:block overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
         onClick={toggleVisibility}
       >
         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 text-white backdrop-blur-3xl px-6 py-4 text-xl font-bold md:px-6 md:py-4 xl:px-7 xl:py-4 md:text-2xl xl:text-xl">
+        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 text-white backdrop-blur-3xl text-xl font-bold md:px-4 md:py-2 xl:px-6 xl:py-4 md:text-2xl lg:text-2xl xl:text-xl">
           ?
         </span>
       </button>
