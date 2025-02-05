@@ -87,3 +87,17 @@ body {
   font-weight: bold;
 }
 
+.error-box {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(0, 0, 0);
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight:lighter;
+  box-shadow: 0 0 10px rgba(102, 93, 93, 0.1);
+  z-index: 1000;
+}

@@ -29,7 +29,7 @@ const App = () => {
   };
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div className="overflow-hidden" style={{ position: "relative", height: "100vh", width: "100vw", }}>
       {/* Render preloader until showPreloader is false */}
       {showPreloader && (
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10 }}>

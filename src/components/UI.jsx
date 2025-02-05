@@ -57,7 +57,7 @@ export const UI = ({ hidden, ...props }) => {
 
     <div className="fixed inset-0 flex justify-between pointer-events-none">
     {/* Responsive Logo */}
-    <div className=" absolute top-4 py-1 lg:py-1 md:top-5 ml-6 lg:mt-6 lg:ml-16 flex items-center">
+     <div className=" absolute top-4 py-1 lg:py-1 md:top-5 ml-6 lg:mt-6 lg:ml-16 flex items-center">
       <img
         src="/logosaas.png"
         alt="SaaS Logo"
@@ -67,10 +67,9 @@ export const UI = ({ hidden, ...props }) => {
       <span className="md:ml-5  mt-1 ml-3 font-sans font-extrabold text-white text-2xl md:text-3xl ">
         Zoe AI
       </span>
-    </div>
+     </div>
   
-  
-      {/* Question mark button */}
+
       {/* Question mark button */}
       <div
       className="absolute sm:mt-2  top-10 right-10 md:right-20 md:top-4 lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
@@ -102,9 +101,17 @@ export const UI = ({ hidden, ...props }) => {
       )}
     </div>
 
+    <div className="container">
+    {isErrorVisible && (
+        <div className="error-box">
+          <p>{error}</p>
+        </div>
+      )}
+    </div>
+
 
       {/* Template Message Buttons */}
-      <div
+  <div
   style={{
     position: "absolute",
     bottom: "6.5rem",
@@ -158,8 +165,8 @@ export const UI = ({ hidden, ...props }) => {
     bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
 
     <span className="inline-flex h-full w-full cursor-pointer items-center justify-center 
-    rounded-full bg-slate-950 px-4 py-2 text-lg  md:text-xl  font-medium text-white backdrop-blur-3xl">
-      {loading || message ? "Sending..." : "Send"}
+    rounded-full bg-slate-950 px-4 py-2 text-sm  md:text-lg lg:text-xl  md:font-medium text-white backdrop-blur-3xl">
+      {loading || message ? "Sending" : "Send"}
     </span>
   </button>
 </div>

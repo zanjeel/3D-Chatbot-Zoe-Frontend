@@ -10,31 +10,31 @@ export const ChatProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [cameraZoomed, setCameraZoomed] = useState(true);
   const [messageType, setMessageType] = useState(null);
-  const [error, setError] = useState(null); // Add error state
-  const [queryCount, setQueryCount] = useState(0); // Track number of queries
+  const [error, setError] = useState(null);
+  const [queryCount, setQueryCount] = useState(0);
 
-  // Auto-dismiss error messages after 5 seconds
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
         setError(null);
-      }, 5000); // 5 seconds
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [error]);
 
   const chat = async (message, messageType = null) => {
-    // Check if query limit is reached
     if (queryCount >= 25) {
       setError("Chat Limit Reached");
       return;
     }
 
     setLoading(true);
-    setError(null); // Clear any previous error
+    setError(null);
+
     try {
       console.log("Sending request to backend with:", { message, messageType });
-      const data = await fetch(`${backendUrl}/chat`, {
+
+      const response = await fetch(`${backendUrl}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,18 +42,13 @@ export const ChatProvider = ({ children }) => {
         body: JSON.stringify({ message, messageType }),
       });
 
-      if (!data.ok) {
-        // Handle rate limit errors
-        if (data.status === 429) {
-          throw new Error("Server request overload. Try again later.");
-        } else {
-          throw new Error(`HTTP error! Status: ${data.status}`);
-        }
+      const resp = await response.json(); // ✅ Parse response first
+
+      if (!response.ok) {
+        setError(resp.error || `Server Overload, Try again Later :( (Status: ${response.status})`);
+        throw new Error(resp.error || `Server Overload, Try again Later :( `);
       }
 
-      const resp = await data.json();
-
-      // Handle error response from backend
       if (resp.error) {
         setError(resp.error);
         return;
@@ -62,11 +57,10 @@ export const ChatProvider = ({ children }) => {
       console.log("Received response from backend:", resp.messages);
       setMessages((messages) => [...messages, ...resp.messages]);
 
-      // Increment query count
       setQueryCount((count) => count + 1);
     } catch (error) {
       console.error("Error in chat function:", error);
-      setError(error.message); // Display the error message
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -95,7 +89,7 @@ export const ChatProvider = ({ children }) => {
         setCameraZoomed,
         messageType,
         setMessageType,
-        error, // Expose error state
+        error,
       }}
     >
       {children}
