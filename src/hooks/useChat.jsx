@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const backendUrl = import.meta.env.VITE_API_URL;
 
 const ChatContext = createContext();
 
@@ -45,6 +45,7 @@ export const ChatProvider = ({ children }) => {
       const resp = await response.json(); // ✅ Parse response first
 
       if (!response.ok) {
+        console.log("backendUrl", {backendUrl});
         setError(resp.error || `Server Overload, Try again Later :( (Status: ${response.status})`);
         throw new Error(resp.error || `Server Overload, Try again Later :( `);
       }
