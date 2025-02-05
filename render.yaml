@@ -1,9 +1,9 @@
 services:
-  - type: web
-    name: chatbot-zoe-frontend
-    buildCommand: "yarn install --immutable --check-cache && yarn build"
-    startCommand: "yarn start"
-    env:
-      NODE_ENV: production
-    buildEnvironment:
-      - corepack: true
+  - name: chatbot-zoe-frontend
+    type: web
+    env: static
+    buildCommand: "corepack enable && yarn install --immutable && yarn build"
+    staticPublishPath: "dist"
+    envVars:
+      - key: NODE_VERSION
+        value: 18
