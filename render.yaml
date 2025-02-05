@@ -1,7 +1,7 @@
 services:
   - type: web
     name: chatbot-zoe-frontend
-    buildCommand: "yarn install --frozen-lockfile && yarn build"
+    buildCommand: "yarn install --immutable --check-cache && yarn build"
     startCommand: "yarn start"
     env:
       NODE_ENV: production
