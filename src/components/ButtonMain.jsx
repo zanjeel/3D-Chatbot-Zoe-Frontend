@@ -11,7 +11,7 @@ const ButtonMain = ({ isDarkMode, setIsDarkMode, onToggleBackground }) => {
   }, [isDarkMode]); // Runs when isDarkMode changes
 
   return (
-    <div className="absolute right-6 top-5 md:top-6 lg:top-12 lg:right-10 xl:top-16 overflow-hidden  cursor-pointer rounded-full group">
+    <div className="absolute right-6 top-14 md:top-16 lg:top-12 lg:right-10 xl:top-16 overflow-hidden  cursor-pointer rounded-full group">
      <div
         className="  top-4  cursor-pointer rounded-full group "
         style={{ backgroundColor: "#1a1a1a", zIndex: "2147483647", pointerEvents: "auto" }}

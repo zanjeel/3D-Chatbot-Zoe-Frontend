@@ -38,10 +38,12 @@ const App = () => {
       )}
 
       {/* Main content */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}>
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}>
         <Leva hidden />
         <UI />
-        <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
+        <div >
+          <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
+        </div>
       </div>
 
       {/* Background component behind the canvas (ONLY HERE) */}

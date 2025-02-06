@@ -43,7 +43,7 @@ export const UI = ({ hidden, ...props }) => {
 
   return (
   <>
-    <header className={`backdrop-blur-3xl hidden lg:block z-20 transition-all duration-300`}
+    <header className={`backdrop-blur-3xl z-20 transition-all duration-300`}
   >
     {/* Announcement Bar */}
     <div className="flex justify-center items-center py-3 bg-black text-white text-sm gap-3">
@@ -57,7 +57,7 @@ export const UI = ({ hidden, ...props }) => {
 
     <div className="fixed inset-0 flex justify-between pointer-events-none">
     {/* Responsive Logo */}
-     <div className=" absolute top-4 py-1 lg:py-1 md:top-5 ml-6 lg:mt-6 lg:ml-16 flex items-center">
+     <div className=" absolute top-4 py-10 lg:py-1 md:top-5 lg:mt-6 xl:mt-9 ml-6 lg:ml-16 flex items-center">
       <img
         src="/logosaas.png"
         alt="SaaS Logo"
@@ -72,7 +72,7 @@ export const UI = ({ hidden, ...props }) => {
 
       {/* Question mark button */}
       <div
-      className="absolute sm:mt-2  top-10 right-10 md:right-20 md:top-4 lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
+      className="absolute mt-2 top-10 right-10 md:right-20 md:top-14  lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
       style={{ backgroundColor: "#1a1a1a", zIndex: 2147483647, pointerEvents: "auto" }}
       >
 
