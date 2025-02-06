@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const backendUrl = import.meta.env.VITE_API_URL;
+// const backendUrl = "http://localhost:3000";
+// Function to generate a unique session ID
+function generateUniqueSessionId() {
+  const timestamp = Date.now(); // Current timestamp
+  const randomValue = Math.random().toString(36).substring(2, 15); // Random alphanumeric string
+  const uniqueId = `${timestamp}-${randomValue}`; // Combine both to create a unique ID
+  return uniqueId;
+}
 
 const ChatContext = createContext();
 
@@ -13,6 +21,13 @@ export const ChatProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [queryCount, setQueryCount] = useState(0);
 
+  // Get or generate the unique user ID (session ID)
+  let userId = sessionStorage.getItem("userId");
+  if (!userId) {
+    userId = generateUniqueSessionId();
+    sessionStorage.setItem("userId", userId);
+  }
+
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
@@ -23,6 +38,7 @@ export const ChatProvider = ({ children }) => {
   }, [error]);
 
   const chat = async (message, messageType = null) => {
+    
     if (queryCount >= 25) {
       setError("Chat Limit Reached");
       return;
@@ -32,22 +48,23 @@ export const ChatProvider = ({ children }) => {
     setError(null);
 
     try {
-      console.log("Sending request to backend with:", { message, messageType });
+      console.log("Sending request to backend with:", { message, messageType, userId });
 
       const response = await fetch(`${backendUrl}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message, messageType }),
+        body: JSON.stringify({ message, messageType, userId }), // Send userId along with message
       });
 
       const resp = await response.json(); // ✅ Parse response first
 
       if (!response.ok) {
-        console.log("backendUrl", {backendUrl});
+        console.error("Error in response:", response);
+        // console.log("backendUrl", { backendUrl });
         setError(resp.error || `Server Overload, Try again Later :( (Status: ${response.status})`);
-        throw new Error(resp.error || `Server Overload, Try again Later :( `);
+        throw new Error(resp.error || `Server Overload, Try again Later :( (Status: ${response.status}) `);
       }
 
       if (resp.error) {
@@ -55,12 +72,12 @@ export const ChatProvider = ({ children }) => {
         return;
       }
 
-      console.log("Received response from backend:", resp.messages);
+      console.log("useChat.jsx: Received response from backend:", resp.messages);
       setMessages((messages) => [...messages, ...resp.messages]);
 
       setQueryCount((count) => count + 1);
     } catch (error) {
-      console.error("Error in chat function:", error);
+      console.error("useChat.jsx: Error in chat function:", error);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -91,6 +108,7 @@ export const ChatProvider = ({ children }) => {
         messageType,
         setMessageType,
         error,
+        userId,
       }}
     >
       {children}
