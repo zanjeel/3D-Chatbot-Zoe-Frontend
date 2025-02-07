@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react"; // Import useEffect
 import { useChat } from "../hooks/useChat";
 
-export const UI = ({ hidden, ...props }) => {
+export const UI = ({ hidden,  ...props }) => {
   const input = useRef();
-  const { chat, loading, message, error } = useChat();
+  const { chat, loading, setLoading, message, error, userId } = useChat();
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -12,19 +12,20 @@ export const UI = ({ hidden, ...props }) => {
   };
 
   useEffect(() => {
-    if (error) {
+    if (error[userId]) {  // Error visibility per user
       setIsErrorVisible(true);
       const timer = setTimeout(() => {
         setIsErrorVisible(false);
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [error, userId]);
 
   const sendMessage = () => {
     const text = input.current.value;
-    if (!loading && !message) {
-      chat(text);
+    if (!loading[userId] && !message) {
+      setLoading((prevState) => ({ ...prevState, [userId]: true }));
+      chat(text);  // Send message without passing userId, as it's handled in useChat
       input.current.value = "";
     }
   };
@@ -36,8 +37,9 @@ export const UI = ({ hidden, ...props }) => {
   ];
 
   const handleTemplateClick = (messageType) => {
-    if (!loading && !message) {
-      chat("", messageType);
+    if (!loading[userId] && !message) {
+      setLoading((prevState) => ({ ...prevState, [userId]: true }));
+      chat("", messageType);  // Send template message type
     }
   };
 
@@ -55,7 +57,7 @@ export const UI = ({ hidden, ...props }) => {
     </div>
     </header>
 
-    <div className="fixed inset-0 flex justify-between pointer-events-none">
+    <div className="fixed z-50 inset-0 flex justify-between ">
     {/* Responsive Logo */}
      <div className=" absolute top-4 py-10 lg:py-1 md:top-5 lg:mt-6 xl:mt-9 ml-6 lg:ml-16 flex items-center">
       <img
@@ -101,10 +103,10 @@ export const UI = ({ hidden, ...props }) => {
       )}
     </div>
 
-    <div className="container">
+    <div className="container ">
     {isErrorVisible && (
         <div className="error-box">
-          <p>{error}</p>
+          <p>{error[userId]}</p>
         </div>
       )}
     </div>
@@ -155,7 +157,7 @@ export const UI = ({ hidden, ...props }) => {
 
   {/* Button */}
   <button
-    disabled={loading || message}
+    disabled={loading[userId] || message}
     onClick={sendMessage}
     className="relative md:h-16 lg:h-20 xl:h-16 h-16 w-[30%] sm:w-[40%] md:w-[25%] max-w-[180px] 
     overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 
@@ -166,7 +168,7 @@ export const UI = ({ hidden, ...props }) => {
 
     <span className="inline-flex h-full w-full cursor-pointer items-center justify-center 
     rounded-full bg-slate-950 px-4 py-2 text-sm  md:text-lg lg:text-xl  md:font-medium text-white backdrop-blur-3xl">
-      {loading || message ? "Sending" : "Send"}
+      {loading[userId] || message ? "Sending" : "Send"}
     </span>
   </button>
 </div>

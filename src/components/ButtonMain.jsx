@@ -14,7 +14,7 @@ const ButtonMain = ({ isDarkMode, setIsDarkMode, onToggleBackground }) => {
     <div className="absolute right-6 top-14 md:top-16 lg:top-12 lg:right-10 xl:top-16 overflow-hidden  cursor-pointer rounded-full group">
      <div
         className="  top-4  cursor-pointer rounded-full group "
-        style={{ backgroundColor: "#1a1a1a", zIndex: "2147483647", pointerEvents: "auto" }}
+        style={{ backgroundColor: "#1a1a1a", pointerEvents: "auto" }}
         >
       <button
         className=" w-12 h-12 xl:h-14 xl:w-14 inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"

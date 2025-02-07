@@ -31,11 +31,6 @@ body {
   width: auto; /* Default width */
 }
 
-/* Style for Canvas */
-.canvas-overlay {
-  position: relative;
-  z-index: 2000000;  /* Set higher z-index to appear on top of the gradient */
-}
 
 .loading-page {
   z-index: 9999;
@@ -88,10 +83,6 @@ body {
 }
 
 .error-box {
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
   background-color: rgb(0, 0, 0);
   color: white;
   text-align: center;
@@ -100,4 +91,9 @@ body {
   font-weight:lighter;
   box-shadow: 0 0 10px rgba(102, 93, 93, 0.1);
   z-index: 1000;
+  transition: opacity 0.5s ease-out;  /* The animation */
+}
+
+.error-box.fade-out {
+  opacity: 0;
 }

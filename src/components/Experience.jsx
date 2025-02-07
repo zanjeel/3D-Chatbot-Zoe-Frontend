@@ -12,10 +12,10 @@ import { Model } from "./Model";
 import { ClipLoader } from 'react-spinners';
 
 const Dots = (props) => {
-  const { loading } = useChat();
+  const { loading, userId } = useChat();
   const [loadingText, setLoadingText] = useState("");
   useEffect(() => {
-    if (loading) {
+    if (loading[userId]) {
       const interval = setInterval(() => {
         setLoadingText((loadingText) => {
           if (loadingText.length > 2) {
@@ -28,8 +28,9 @@ const Dots = (props) => {
     } else {
       setLoadingText("");
     }
-  }, [loading]);
-  if (!loading) return null;
+  }, [loading, userId]);
+
+  if (!loading[userId])return null;
   return (
     <group {...props}>
       <Text fontSize={0.14} anchorX={"left"} anchorY={"bottom"}>
@@ -59,32 +60,7 @@ export const Experience = () => {
     }
   }, [cameraZoomed]);
 
-  const [fontSize, setFontSize] = useState(1.5); // Default font size
 
-  useEffect(() => {
-    // Function to update font size based on screen width
-    const updateFontSize = () => {
-      const width = window.innerWidth;
-
-      if (width < 640) {
-        setFontSize(1);  // Smaller font for smaller screens
-      } else if (width < 768) {
-        setFontSize(1.2); // Medium font size for medium screens
-      } else {
-        setFontSize(1.5); // Default font size for larger screens
-      }
-    };
-
-    // Initial check
-    updateFontSize();
-
-    // Event listener to check for screen resize
-    window.addEventListener("resize", updateFontSize);
-
-    // Cleanup listener on component unmount
-    return () => window.removeEventListener("resize", updateFontSize);
-  }, []);
-  
   return (
     <>
       <CameraControls ref={cameraControls}

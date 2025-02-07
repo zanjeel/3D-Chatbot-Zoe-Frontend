@@ -32,40 +32,38 @@ const App = () => {
     <div className="overflow-hidden" style={{ position: "relative", height: "100vh", width: "100vw", }}>
       {/* Render preloader until showPreloader is false */}
       {showPreloader && (
-        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10 }}>
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 100 }}>
           <Preloader />
         </div>
       )}
 
       {/* Main content */}
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 2 }}>
         <Leva hidden />
-        <UI />
-        <div >
+        <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} >
           <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
         </div>
-      </div>
 
       {/* Background component behind the canvas (ONLY HERE) */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0, overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -10, overflow: "hidden" }}>
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 
       {/* Canvas overlaying the background */}
+      
       <Canvas
         shadows
         camera={{ position: [0, 0, 1], fov: 30 }}
-        className="canvas-overlay"
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          zIndex: 1,
           overflow:"hidden",
+          zIndex: -1,
         }}
       >
-        <Experience />
+        <Experience  />
       </Canvas>
     </div>
   );

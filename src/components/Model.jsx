@@ -111,7 +111,7 @@ export function Model(props) {
     "/models/model.glb"
   );
 
-  const { message, onMessagePlayed, chat } = useChat();
+  const { message, onMessagePlayed, chat, userId } = useChat();
 
   const [lipsync, setLipsync] = useState();
 
