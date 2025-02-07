@@ -130,10 +130,22 @@ export function Model(props) {
     { type: "audio/mp3" }
   );
   const audioURL = URL.createObjectURL(audioBlob);
-  const audio = new Audio(audioURL);
-  audio.play();
-  setAudio(audio);
-  audio.onended = onMessagePlayed;
+
+  // Using Web Audio API for better compatibility
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+fetch(audioURL)
+  .then((response) => response.arrayBuffer())
+  .then((buffer) => audioCtx.decodeAudioData(buffer))
+  .then((decodedData) => {
+    const source = audioCtx.createBufferSource();
+    source.buffer = decodedData;
+    source.connect(audioCtx.destination);
+    source.start();
+
+    setAudio(source); // Store reference if needed
+    source.onended = onMessagePlayed; // Call the callback after playback ends
+  })
+  .catch((error) => console.error("Error playing audio:", error));
 }, [message]);
 
   const { animations } = useGLTF("/models/animations.glb");
