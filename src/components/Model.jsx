@@ -124,11 +124,17 @@ export function Model(props) {
     setAnimation(message.animation);
     setFacialExpression(message.facialExpression);
     setLipsync(message.lipsync);
-    const audio = new Audio("data:audio/mp3;base64," + message.audio);
-    audio.play();
-    setAudio(audio);
-    audio.onended = onMessagePlayed;
-  }, [message]);
+
+  const audioBlob = new Blob(
+    [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
+    { type: "audio/mp3" }
+  );
+  const audioURL = URL.createObjectURL(audioBlob);
+  const audio = new Audio(audioURL);
+  audio.play();
+  setAudio(audio);
+  audio.onended = onMessagePlayed;
+}, [message]);
 
   const { animations } = useGLTF("/models/animations.glb");
 

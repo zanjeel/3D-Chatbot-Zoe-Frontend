@@ -40,7 +40,7 @@ const App = () => {
       {/* Main content */}
         <Leva hidden />
         <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} >
+        <div  style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} >
           <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
         </div>
 
