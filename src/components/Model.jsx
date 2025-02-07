@@ -131,21 +131,18 @@ export function Model(props) {
   );
   const audioURL = URL.createObjectURL(audioBlob);
   
-  const newAudio = new Audio(audioURL);
-  newAudio.onended = onMessagePlayed;
-  setAudio(newAudio);
+    
+  if (!audio) {
+    // Create a single persistent audio element
+    const audioElement = new Audio();
+    audioElement.onended = onMessagePlayed;
+    setAudio(audioElement);
+  }
 
-  // Check if it's mobile, if yes, add event listener to handle user action
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    // Mobile: Wait for the first user interaction
-    const playAudio = () => {
-      newAudio.play().catch((e) => console.error("Audio play failed:", e));
-      window.removeEventListener("click", playAudio); // Remove after first click
-    };
-    window.addEventListener("click", playAudio); // Wait for the first click to play
-  } else {
-    // Desktop: Directly play
-    newAudio.play().catch((e) => console.error("Audio play failed:", e));
+  // Set the new audio source and play
+  if (audio) {
+    audio.src = audioURL;
+    audio.play().catch((error) => console.error("Autoplay prevented:", error));
   }
 }, [message]);
 
