@@ -114,6 +114,7 @@ export function Model(props) {
   const { message, onMessagePlayed, chat, userId } = useChat();
 
   const [lipsync, setLipsync] = useState();
+  
   useEffect(() => {
     console.log(message);
     if (!message) {
@@ -134,24 +135,29 @@ export function Model(props) {
     audio.onended = onMessagePlayed;
     setAudio(audio);
   
-    // Check if autoplay is allowed
+    // Function to play audio
     const playAudio = async () => {
       try {
         await audio.play();
+        localStorage.setItem("audioUnlocked", "true"); // Save unlock state
       } catch (e) {
         console.warn("Autoplay blocked, waiting for user interaction");
   
-        // Add an event listener for first user interaction
-        const unlockAutoplay = () => {
-          audio.play().catch(err => console.error("Playback error:", err));
-          window.removeEventListener("click", unlockAutoplay);
-        };
-        window.addEventListener("click", unlockAutoplay, { once: true });
+        // Only add event listener if not unlocked before
+        if (!localStorage.getItem("audioUnlocked")) {
+          const unlockAutoplay = () => {
+            audio.play().catch(err => console.error("Playback error:", err));
+            localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+            window.removeEventListener("click", unlockAutoplay);
+          };
+          window.addEventListener("click", unlockAutoplay, { once: true });
+        }
       }
     };
   
     playAudio();
   }, [message]);
+  
   
   const { animations } = useGLTF("/models/animations.glb");
 
