@@ -114,7 +114,6 @@ export function Model(props) {
   const { message, onMessagePlayed, chat, userId } = useChat();
 
   const [lipsync, setLipsync] = useState();
-
   useEffect(() => {
     console.log(message);
     if (!message) {
@@ -124,28 +123,36 @@ export function Model(props) {
     setAnimation(message.animation);
     setFacialExpression(message.facialExpression);
     setLipsync(message.lipsync);
-
-  const audioBlob = new Blob(
-    [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
-    { type: "audio/mp3" }
-  );
-  const audioURL = URL.createObjectURL(audioBlob);
   
+    const audioBlob = new Blob(
+      [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
+      { type: "audio/mp3" }
+    );
+    const audioURL = URL.createObjectURL(audioBlob);
     
-  if (!audio) {
-    // Create a single persistent audio element
-    const audioElement = new Audio();
-    audioElement.onended = onMessagePlayed;
-    setAudio(audioElement);
-  }
-
-  // Set the new audio source and play
-  if (audio) {
-    audio.src = audioURL;
-    audio.play().catch((error) => console.error("Autoplay prevented:", error));
-  }
-}, [message]);
-
+    const audio = new Audio(audioURL);
+    audio.onended = onMessagePlayed;
+    setAudio(audio);
+  
+    // Check if autoplay is allowed
+    const playAudio = async () => {
+      try {
+        await audio.play();
+      } catch (e) {
+        console.warn("Autoplay blocked, waiting for user interaction");
+  
+        // Add an event listener for first user interaction
+        const unlockAutoplay = () => {
+          audio.play().catch(err => console.error("Playback error:", err));
+          window.removeEventListener("click", unlockAutoplay);
+        };
+        window.addEventListener("click", unlockAutoplay, { once: true });
+      }
+    };
+  
+    playAudio();
+  }, [message]);
+  
   const { animations } = useGLTF("/models/animations.glb");
 
   const group = useRef();
