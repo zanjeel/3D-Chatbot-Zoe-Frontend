@@ -131,9 +131,9 @@ export function Model(props) {
   );
   const audioURL = URL.createObjectURL(audioBlob);
   
-  const audio = new Audio(audioURL);
-  audio.onended = onMessagePlayed;
-  setAudio(audio);
+  const newAudio = new Audio(audioURL);
+  newAudio.onended = onMessagePlayed;
+  setAudio(newAudio);
 
   // Check if it's mobile, if yes, add event listener to handle user action
   if (/Mobi|Android/i.test(navigator.userAgent)) {
