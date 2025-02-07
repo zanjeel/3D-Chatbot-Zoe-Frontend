@@ -157,12 +157,21 @@ export function Model(props) {
     animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name // Check if Idle animation exists otherwise use first animation
   );
   useEffect(() => {
-    actions[animation]
-      .reset()
-      .fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5)
-      .play();
-    return () => actions[animation].fadeOut(0.5);
-  }, [animation]);
+    // Check if actions and the animation exist
+    if (actions[animation]) {
+      actions[animation]
+        .reset()
+        .fadeIn(mixer?.stats?.actions?.inUse === 0 ? 0 : 0.5)
+        .play();
+    }
+  
+    // Clean up when animation changes
+    return () => {
+      if (actions[animation]) {
+        actions[animation].fadeOut(0.5);
+      }
+    };
+  }, [animation, actions, mixer]);
 
   const lerpMorphTarget = (target, value, speed = 0.1) => {
     scene.traverse((child) => {
