@@ -137,15 +137,16 @@ export function Model(props) {
 
   // Check if it's mobile, if yes, add event listener to handle user action
   if (/Mobi|Android/i.test(navigator.userAgent)) {
-    // For mobile devices, you need to wait for user interaction
-    audio.play().catch((e) => {
-      console.error("Audio play error on mobile: ", e);
-    });
+    // Mobile: Wait for the first user interaction
+    const playAudio = () => {
+      newAudio.play().catch((e) => console.error("Audio play failed:", e));
+      window.removeEventListener("click", playAudio); // Remove after first click
+    };
+    window.addEventListener("click", playAudio); // Wait for the first click to play
   } else {
-    // Directly play audio for desktop
-    audio.play();
+    // Desktop: Directly play
+    newAudio.play().catch((e) => console.error("Audio play failed:", e));
   }
-
 }, [message]);
 
   const { animations } = useGLTF("/models/animations.glb");
