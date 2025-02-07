@@ -217,12 +217,13 @@ useEffect(() => {
   const [audio, setAudio] = useState();
 
   useFrame(() => {
-    const appliedMorphTargets = [];
-    !setupMode &&
+    const appliedMorphTargets = []; // Define the array here
+  
+    if (!setupMode) {
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         const mapping = facialExpressions[facialExpression];
         if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-          return; // eyes wink/blink are handled separately
+          return; // Skip eye blink targets
         }
         if (mapping && mapping[key]) {
           lerpMorphTarget(key, mapping[key], 0.1);
@@ -230,44 +231,40 @@ useEffect(() => {
           lerpMorphTarget(key, 0, 0.1);
         }
       });
-
-      
-    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
-    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
-
-    // LIPSYNC
-    if (setupMode) {
-      return;
-    }
-
-    if (message && lipsync && audioRef.current) {
-      const audio = audioRef.current;
-      const currentAudioTime = audio.currentTime;
-      
   
-      // Check for lip sync cues based on audio time
-      if (currentAudioTime !== undefined) {
-        for (let i = 0; i < lipsync.mouthCues.length; i++) {
-          const mouthCue = lipsync.mouthCues[i];
-          if (
-            currentAudioTime >= mouthCue.start &&
-            currentAudioTime <= mouthCue.end
-          ) {
-          appliedMorphTargets.push(corresponding[mouthCue.value]);
-          lerpMorphTarget(corresponding[mouthCue.value], 1, 0.2);
-          break;
+      // Handle eye blink separately
+      lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
+      lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
+  
+      // LIPSYNC logic
+      if (!setupMode && message && lipsync && audioRef.current) {
+        const audio = audioRef.current;
+        const currentAudioTime = audio.currentTime;
+  
+        if (currentAudioTime !== undefined) {
+          for (let i = 0; i < lipsync.mouthCues.length; i++) {
+            const mouthCue = lipsync.mouthCues[i];
+            if (
+              currentAudioTime >= mouthCue.start &&
+              currentAudioTime <= mouthCue.end
+            ) {
+              appliedMorphTargets.push(corresponding[mouthCue.value]); // Add the morph target to the list
+              lerpMorphTarget(corresponding[mouthCue.value], 1, 0.2); // Apply morph target
+              break;
+            }
+          }
         }
       }
+  
+      // Reset other morph targets if not in the appliedMorphTargets list
+      Object.values(corresponding).forEach((value) => {
+        if (!appliedMorphTargets.includes(value)) {
+          lerpMorphTarget(value, 0, 0.1); // Reset morph target
+        }
+      });
     }
-  }
-
-    Object.values(corresponding).forEach((value) => {
-      if (appliedMorphTargets.includes(value)) {
-        return;
-      }
-      lerpMorphTarget(value, 0, 0.1);
-    });
   });
+  
 
   useControls("FacialExpressions", {
     chat: button(() => chat()),
