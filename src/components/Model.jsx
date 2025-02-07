@@ -114,6 +114,7 @@ export function Model(props) {
   const { message, onMessagePlayed, chat, userId } = useChat();
 
   const [lipsync, setLipsync] = useState();
+
   const audioRef = useRef(new Audio()); // Persistent Audio instance
 
 useEffect(() => {
@@ -157,7 +158,6 @@ useEffect(() => {
 
   playAudio();
 }, [message]);
-
   
   const { animations } = useGLTF("/models/animations.glb");
 
@@ -239,21 +239,26 @@ useEffect(() => {
       return;
     }
 
-    const appliedMorphTargets = [];
-    if (message && lipsync) {
+    if (message && lipsync && audioRef.current) {
+      const audio = audioRef.current;
       const currentAudioTime = audio.currentTime;
-      for (let i = 0; i < lipsync.mouthCues.length; i++) {
-        const mouthCue = lipsync.mouthCues[i];
-        if (
-          currentAudioTime >= mouthCue.start &&
-          currentAudioTime <= mouthCue.end
-        ) {
+      const appliedMorphTargets = [];
+  
+      // Check for lip sync cues based on audio time
+      if (currentAudioTime !== undefined) {
+        for (let i = 0; i < lipsync.mouthCues.length; i++) {
+          const mouthCue = lipsync.mouthCues[i];
+          if (
+            currentAudioTime >= mouthCue.start &&
+            currentAudioTime <= mouthCue.end
+          ) {
           appliedMorphTargets.push(corresponding[mouthCue.value]);
           lerpMorphTarget(corresponding[mouthCue.value], 1, 0.2);
           break;
         }
       }
     }
+  }
 
     Object.values(corresponding).forEach((value) => {
       if (appliedMorphTargets.includes(value)) {
