@@ -217,6 +217,7 @@ useEffect(() => {
   const [audio, setAudio] = useState();
 
   useFrame(() => {
+    const appliedMorphTargets = [];
     !setupMode &&
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         const mapping = facialExpressions[facialExpression];
@@ -242,7 +243,7 @@ useEffect(() => {
     if (message && lipsync && audioRef.current) {
       const audio = audioRef.current;
       const currentAudioTime = audio.currentTime;
-      const appliedMorphTargets = [];
+      
   
       // Check for lip sync cues based on audio time
       if (currentAudioTime !== undefined) {
