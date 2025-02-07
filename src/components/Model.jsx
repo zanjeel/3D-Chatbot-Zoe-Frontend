@@ -130,22 +130,25 @@ export function Model(props) {
     { type: "audio/mp3" }
   );
   const audioURL = URL.createObjectURL(audioBlob);
+  
+  const audio = new Audio(audioURL);
+  audio.onended = onMessagePlayed;
+  setAudio(audio);
 
-  // Using Web Audio API for better compatibility
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-fetch(audioURL)
-  .then((response) => response.arrayBuffer())
-  .then((buffer) => audioCtx.decodeAudioData(buffer))
-  .then((decodedData) => {
-    const source = audioCtx.createBufferSource();
-    source.buffer = decodedData;
-    source.connect(audioCtx.destination);
-    source.start();
+  // Check if it's mobile, if yes, add event listener to handle user action
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    // For mobile devices, you need to wait for user interaction
+    const playAudio = () => {
+      audio.play();
+      window.removeEventListener("click", playAudio);  // Remove after the first play
+    };
+    
+    window.addEventListener("click", playAudio);
+  } else {
+    // Directly play audio for desktop
+    audio.play();
+  }
 
-    setAudio(source); // Store reference if needed
-    source.onended = onMessagePlayed; // Call the callback after playback ends
-  })
-  .catch((error) => console.error("Error playing audio:", error));
 }, [message]);
 
   const { animations } = useGLTF("/models/animations.glb");
