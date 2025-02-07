@@ -138,12 +138,9 @@ export function Model(props) {
   // Check if it's mobile, if yes, add event listener to handle user action
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     // For mobile devices, you need to wait for user interaction
-    const playAudio = () => {
-      audio.play();
-      window.removeEventListener("click", playAudio);  // Remove after the first play
-    };
-    
-    window.addEventListener("click", playAudio);
+    audio.play().catch((e) => {
+      console.error("Audio play error on mobile: ", e);
+    });
   } else {
     // Directly play audio for desktop
     audio.play();
@@ -213,6 +210,7 @@ export function Model(props) {
         }
       });
 
+      
     lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
     lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
 
