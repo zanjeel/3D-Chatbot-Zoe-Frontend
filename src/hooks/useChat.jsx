@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-// const backendUrl = import.meta.env.VITE_API_URL;
-const backendUrl = "http://localhost:3000";
+const backendUrl = import.meta.env.VITE_API_URL;
+// const backendUrl = "http://localhost:3000";
 // Function to generate a unique session ID
 function generateUniqueSessionId() {
   const timestamp = Date.now(); // Current timestamp
