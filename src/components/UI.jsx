@@ -33,8 +33,8 @@ export const UI = ({ hidden,  ...props }) => {
     const text = input.current.value;
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
-      chat(text);  // Send message without passing userId, as it's handled in useChat
       handleUserInteraction(); 
+      chat(text);  // Send message without passing userId, as it's handled in useChat
       input.current.value = "";
     }
   };
@@ -48,8 +48,9 @@ export const UI = ({ hidden,  ...props }) => {
   const handleTemplateClick = (messageType) => {
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
-      chat("", messageType);  // Send template message type
       handleUserInteraction(); // Trigger interaction on template click
+      chat("", messageType);  // Send template message type
+     
     }
   };
 
