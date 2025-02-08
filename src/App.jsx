@@ -16,6 +16,31 @@ const App = () => {
   const [isGradientBg, setIsGradientBg] = useState(true);
   // State to toggle dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const audioRef = useRef(null);
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+
+    const audio = audioRef.current;
+
+    // Check if autoplay was previously unlocked
+    if (!localStorage.getItem("audioUnlocked")) {
+      const unlockAudio = () => {
+        audio.volume = 0; // 🔇 Silent audio
+        audio.src = process.env.PUBLIC_URL + "/silent.mp3";
+        audio.play().then(() => {
+          localStorage.setItem("audioUnlocked", "true");
+          console.log("Autoplay unlocked!");
+        }).catch(err => console.error("Playback error:", err));
+
+        window.removeEventListener("click", unlockAudio);
+      };
+
+      // Wait for user interaction (click/tap)
+      window.addEventListener("click", unlockAudio, { once: true });
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
