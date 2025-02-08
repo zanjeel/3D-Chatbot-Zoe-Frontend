@@ -122,51 +122,49 @@ export function Model(props) {
     setAnimation(message.animation || "Idle");
     setFacialExpression(message.facialExpression || "");
     setLipsync(message.lipsync);
-    console.log("hasInteracted in Model:", hasInteracted);  // Log state value
+
+    console.log("hasInteracted in Model:", hasInteracted); // Log state value
     console.log("Audio unlocked:", localStorage.getItem("audioUnlocked"));
 
-     // Prepare and play audio if available
-  if (message.audio) {
-    const audioBlob = new Blob(
-      [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
-      { type: "audio/mp3" }
-    );
-    const audioURL = URL.createObjectURL(audioBlob);
+    if (message.audio) {
+      const audioBlob = new Blob(
+        [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
+        { type: "audio/mp3" }
+      );
+      const audioURL = URL.createObjectURL(audioBlob);
 
-    const audio = audioRef.current;
-    audio.src = audioURL;
-    audio.onended = onMessagePlayed;
-    alert("Audio URL set: ", audio.src);
+      const audio = audioRef.current;
+      audio.src = audioURL;
+      audio.onended = onMessagePlayed;
+      console.log("Audio URL set:", audio.src);
 
-    // Attempt to play immediately, handling user interaction
-    const playAudio = async () => {
-      try {
-        if (hasInteracted || localStorage.getItem("audioUnlocked")) {
-          alert("Attempting to play audio");
-          // If the user has interacted or the audio is unlocked, play the audio
-          await audio.play();
-          localStorage.setItem("audioUnlocked", "true"); // Save unlock state
-        } else {
-          alert("Autoplay blocked, waiting for user interaction");
-          // Only listen for clicks if autoplay is blocked (for mobile devices)
-          const unlockAutoplay = () => {
-            audio.play().catch(err => console.error("Playback error:", err));
-            localStorage.setItem("audioUnlocked", "true"); // Unlock audio
-            alert("Autoplay unlocked!");  // Check if the unlock happens
-            window.removeEventListener("click", unlockAutoplay);
-          };
-          // Add a listener for a click event to unlock autoplay
-          window.addEventListener("click", unlockAutoplay, { once: true });
+      const playAudio = async () => {
+        try {
+          if (hasInteracted || localStorage.getItem("audioUnlocked")) {
+            console.log("Attempting to play audio");
+            await audio.play();
+            localStorage.setItem("audioUnlocked", "true"); // Save unlock state
+          } else {
+            console.log("Autoplay blocked, waiting for user interaction");
+            const unlockAutoplay = () => {
+              audio.play().catch(err => console.error("Playback error:", err));
+              localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+              console.log("Autoplay unlocked!");
+              window.removeEventListener("click", unlockAutoplay);
+            };
+            window.addEventListener("click", unlockAutoplay, { once: true });
+          }
+        } catch (e) {
+          console.warn("Error attempting to play audio", e);
         }
-      } catch (e) {
-        console.warn("Error attempting to play audio", e);
-      }
-    };
+      };
 
-    // Call the playAudio function to attempt audio playback
-    playAudio();
-  }
-}, [message, onMessagePlayed, hasInteracted]); 
+      // Wait for state update before attempting to play
+      if (hasInteracted || localStorage.getItem("audioUnlocked")) {
+        playAudio();
+      }
+    }
+  }, [message, onMessagePlayed, hasInteracted]);
 
   const { animations } = useGLTF("/models/animations.glb");
   const group = useRef();
