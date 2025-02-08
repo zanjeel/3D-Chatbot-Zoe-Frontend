@@ -3,9 +3,10 @@ import { useChat } from "../hooks/useChat";
 
 export const UI = ({ hidden,  ...props }) => {
   const input = useRef();
-  const { chat, loading, setLoading, message, error, userId, hasInteracted, setHasInteracted } = useChat();
+  const { chat, loading, setLoading, message, error, userId } = useChat();
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
@@ -21,21 +22,11 @@ export const UI = ({ hidden,  ...props }) => {
     }
   }, [error, userId]);
 
-  const handleUserInteraction = () => {
-    if (!hasInteracted) {
-      setHasInteracted(true);
-      localStorage.setItem("audioUnlocked", "true"); // Set flag to enable autoplay for future messages
-      alert("hasInteracted set to true");
-    }
-    alert("hasInteracted state: " + hasInteracted);
-  };
-
   const sendMessage = () => {
     const text = input.current.value;
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
-      handleUserInteraction(); 
-      chat(text, hasInteracted);  // Send message without passing userId, as it's handled in useChat
+      chat(text);  // Send message without passing userId, as it's handled in useChat
       input.current.value = "";
     }
   };
@@ -49,9 +40,8 @@ export const UI = ({ hidden,  ...props }) => {
   const handleTemplateClick = (messageType) => {
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
-      handleUserInteraction(); // Trigger interaction on template click
-      chat("", messageType, hasInteracted);  // Send template message type
-     
+      chat("", messageType);  // Send template message type
+      setIsChatVisible(true);
     }
   };
 
@@ -154,7 +144,7 @@ export const UI = ({ hidden,  ...props }) => {
   ))}
 </div>
 
-      
+{isChatVisible && (
     <div className="mb-2 md:mb-0 absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-2  p-1   bg-[#1a1a1a] rounded-full shadow-lg border border-[#333] pointer-events-auto w-[90%] max-w-[800px]">
 
   {/* Input Field */}
@@ -163,10 +153,7 @@ export const UI = ({ hidden,  ...props }) => {
     placeholder="Hey, what's up..."
     ref={input}
     onKeyDown={(e) => {
-      if (e.key === "Enter") {
-        sendMessage();
-        handleUserInteraction(); // Trigger interaction on typing
-      }
+      if (e.key === "Enter") sendMessage();
     }}
   />
 
@@ -187,7 +174,7 @@ export const UI = ({ hidden,  ...props }) => {
     </span>
   </button>
 </div>
-
+)}
     </div>
 
     </>
