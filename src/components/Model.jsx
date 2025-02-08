@@ -136,17 +136,18 @@ export function Model(props) {
     const audio = audioRef.current;
     audio.src = audioURL;
     audio.onended = onMessagePlayed;
+    alert("Audio URL set: ", audio.src);
 
     // Attempt to play immediately, handling user interaction
     const playAudio = async () => {
       try {
         if (hasInteracted || localStorage.getItem("audioUnlocked")) {
+          alert("Attempting to play audio");
           // If the user has interacted or the audio is unlocked, play the audio
           await audio.play();
           localStorage.setItem("audioUnlocked", "true"); // Save unlock state
         } else {
-          console.warn("Autoplay blocked, waiting for user interaction");
-
+          alert("Autoplay blocked, waiting for user interaction");
           // Only listen for clicks if autoplay is blocked (for mobile devices)
           const unlockAutoplay = () => {
             audio.play().catch(err => console.error("Playback error:", err));
