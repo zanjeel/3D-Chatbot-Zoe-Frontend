@@ -105,13 +105,13 @@ const corresponding = {
 };
 
 let setupMode = false;
+
+
 export function Model(props) {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
 
   const { message, onMessagePlayed, chat, userId } = useChat();
-
   const [lipsync, setLipsync] = useState();
-
   const audioRef = useRef(new Audio()); // Persistent Audio instance
 
   useEffect(() => {
@@ -129,42 +129,40 @@ export function Model(props) {
       { type: "audio/mp3" }
     );
     const audioURL = URL.createObjectURL(audioBlob);
-
     const audio = audioRef.current;
     audio.src = audioURL;
     audio.onended = onMessagePlayed;
 
+    // Play audio after first interaction
     const playAudio = async () => {
       try {
-        // Try playing the audio immediately
+        // Attempt to play the audio immediately
         await audio.play();
-        localStorage.setItem("audioUnlocked", "true"); // Save unlock state
+        localStorage.setItem("audioUnlocked", "true"); // Unlock audio on success
       } catch (e) {
         console.warn("Autoplay blocked, waiting for user interaction");
 
-        // Check if audio is already unlocked
+        // If autoplay is blocked, wait for user interaction
         if (!localStorage.getItem("audioUnlocked")) {
-          const unlockAutoplay = () => {
-            audio.play().catch((err) => console.error("Playback error:", err));
-            localStorage.setItem("audioUnlocked", "true"); // Unlock audio
-            window.removeEventListener("click", unlockAutoplay);
+          const unlockAutoplay = async () => {
+            try {
+              await audio.play(); // Try playing again after first click
+              localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+              window.removeEventListener("click", unlockAutoplay); // Remove listener after successful play
+            } catch (err) {
+              console.error("Playback error:", err);
+            }
           };
           window.addEventListener("click", unlockAutoplay, { once: true });
         }
       }
     };
 
-    // Check if audio is unlocked or already played
-    if (localStorage.getItem("audioUnlocked") === "true") {
-      playAudio(); // Immediately play if unlocked
-    } else {
-      // Attempt to play audio on user click
-      playAudio();
-    }
+    // Call playAudio to handle autoplay behavior
+    playAudio();
   }, [message]);
 
   const { animations } = useGLTF("/models/animations.glb");
-
   const group = useRef();
   const { actions, mixer } = useAnimations(animations, group);
   const [animation, setAnimation] = useState(
@@ -172,7 +170,6 @@ export function Model(props) {
   );
 
   useEffect(() => {
-    // Check if actions and the animation exist
     if (actions[animation]) {
       actions[animation]
         .reset()
@@ -223,7 +220,7 @@ export function Model(props) {
 
   useFrame(() => {
     const appliedMorphTargets = []; // Define the array here
-
+  
     if (!setupMode) {
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         const mapping = facialExpressions[facialExpression];
@@ -236,16 +233,16 @@ export function Model(props) {
           lerpMorphTarget(key, 0, 0.1);
         }
       });
-
+  
       // Handle eye blink separately
       lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
       lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
-
+  
       // LIPSYNC logic
       if (!setupMode && message && lipsync && audioRef.current) {
         const audio = audioRef.current;
         const currentAudioTime = audio.currentTime;
-
+  
         if (currentAudioTime !== undefined) {
           for (let i = 0; i < lipsync.mouthCues.length; i++) {
             const mouthCue = lipsync.mouthCues[i];
@@ -260,7 +257,7 @@ export function Model(props) {
           }
         }
       }
-
+  
       // Reset other morph targets if not in the appliedMorphTargets list
       Object.values(corresponding).forEach((value) => {
         if (!appliedMorphTargets.includes(value)) {
