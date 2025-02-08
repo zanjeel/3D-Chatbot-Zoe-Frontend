@@ -269,8 +269,6 @@ export function Model(props) {
       });
     }
   });
-}
-
   
 
   useControls("FacialExpressions", {
