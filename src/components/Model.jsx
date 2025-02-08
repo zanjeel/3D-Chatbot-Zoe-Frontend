@@ -123,6 +123,8 @@ export function Model(props) {
     setFacialExpression(message.facialExpression || "");
     setLipsync(message.lipsync);
 
+     // Prepare and play audio if available
+  if (message.audio) {
     const audioBlob = new Blob(
       [Uint8Array.from(atob(message.audio), (c) => c.charCodeAt(0))],
       { type: "audio/mp3" }
@@ -157,7 +159,8 @@ export function Model(props) {
 
     // Call the playAudio function to attempt audio playback
     playAudio();
-  }, [message]);
+  }
+  }, [message, onMessagePlayed]);
 
   const { animations } = useGLTF("/models/animations.glb");
   const group = useRef();
