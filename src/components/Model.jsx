@@ -110,9 +110,13 @@ export function Model(props) {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
   const { message, onMessagePlayed, chat, userId } = useChat();
   const [lipsync, setLipsync] = useState();
-  const audioRef = useRef(new Audio()); // Persistent Audio instance
+  const audioRef = useRef(null);
 
   useEffect(() => {
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio(); // Create audio instance once
+    }
     console.log(message);
     if (!message) {
       setAnimation("Idle");
