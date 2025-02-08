@@ -151,6 +151,7 @@ export function Model(props) {
           const unlockAutoplay = () => {
             audio.play().catch(err => console.error("Playback error:", err));
             localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+            alert("Autoplay unlocked!");  // Check if the unlock happens
             window.removeEventListener("click", unlockAutoplay);
           };
           // Add a listener for a click event to unlock autoplay

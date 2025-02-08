@@ -25,8 +25,9 @@ export const UI = ({ hidden,  ...props }) => {
     if (!hasInteracted) {
       setHasInteracted(true);
       localStorage.setItem("audioUnlocked", "true"); // Set flag to enable autoplay for future messages
+      alert("hasInteracted set to true");
     }
-    console.log("hasInteracted state:", hasInteracted);
+    alert("hasInteracted state: " + hasInteracted);
   };
 
   const sendMessage = () => {
