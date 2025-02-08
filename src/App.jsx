@@ -18,29 +18,17 @@ const App = () => {
   const audioRef = useRef(new Audio());
 
   useEffect(() => {
-    const unlockAudio = () => {
-      console.log("👂 Unlocking audio...");
-      audioRef.current.src = "/silence.mp3";
-      audioRef.current.volume = 0;
-      audioRef.current.play()
-        .then(() => {
-          console.log("✅ Audio unlocked and playing silently.");
-          localStorage.setItem("audioUnlocked", "true");
-        })
-        .catch(err => console.error("⚠️ Playback error:", err));
+    console.log("🛠 Checking audioUnlocked state...");
+    const storedAudioUnlocked = localStorage.getItem("audioUnlocked");
+    console.log("🔎 localStorage.getItem('audioUnlocked'):", storedAudioUnlocked);
 
-      window.removeEventListener("click", unlockAudio);
-      window.removeEventListener("keydown", unlockAudio);
-      window.removeEventListener("touchstart", unlockAudio);
-    };
-
-    if (!localStorage.getItem("audioUnlocked")) {
-      console.log("🔒 Waiting for user interaction to unlock audio...");
+    if (!storedAudioUnlocked) {
+      console.log("🔒 No audio unlocked yet, waiting for user interaction...");
       window.addEventListener("click", unlockAudio, { once: true });
       window.addEventListener("keydown", unlockAudio, { once: true });
       window.addEventListener("touchstart", unlockAudio, { once: true });
     } else {
-      console.log("🔓 Audio already unlocked.");
+      console.log("✅ Audio already unlocked.");
     }
   }, []);
 
@@ -48,19 +36,46 @@ const App = () => {
     setTimeout(() => {
       setShowPreloader(false);
       if (!localStorage.getItem("audioUnlocked")) {
+        console.log("🛑 Showing popup because audio is not unlocked.");
         setShowPopup(true);
+      } else {
+        console.log("🎉 Audio is already unlocked. No popup needed.");
+        setShowPopup(false);
       }
     }, 2000);
   }, []);
 
-  const toggleBackground = () => setIsGradientBg(!isGradientBg);
-
-  const handlePopupClose = () => {
+  const unlockAudio = () => {
+    console.log("👂 Unlocking audio...");
     audioRef.current.src = "/silence.mp3";
     audioRef.current.volume = 0;
-    audioRef.current.play().catch(err => console.error("Playback error:", err));
+    audioRef.current.play()
+      .then(() => {
+        console.log("✅ Audio unlocked successfully!");
+        localStorage.setItem("audioUnlocked", "true");
+      })
+      .catch(err => console.error("⚠️ Playback error:", err));
+
+    window.removeEventListener("click", unlockAudio);
+    window.removeEventListener("keydown", unlockAudio);
+    window.removeEventListener("touchstart", unlockAudio);
+  };
+
+  const handlePopupClose = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+  
+    // Attach audio to a user action like a click
+    document.body.addEventListener("click", () => {
+      audio.src = "/silence.mp3"; 
+      audio.volume = 0;
+      audio.play().then(() => {
+        console.log("✅ Audio unlocked!");
+        localStorage.setItem("audioUnlocked", "true");
+      }).catch(err => console.error("⚠️ Playback error:", err));
+    }, { once: true }); // Ensures it runs only once
+  
     setShowPopup(false);
-    localStorage.setItem("audioUnlocked", "true");
   };
 
   return (
@@ -74,7 +89,7 @@ const App = () => {
       <Leva hidden />
       <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
       <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }}>
-        <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
+        <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       </div>
 
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -10, overflow: "hidden" }}>
@@ -107,7 +122,6 @@ const App = () => {
               height: "100%",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
               zIndex: 1000,
-              pointerEvents: "auto",
             }}
           />
           <div
@@ -121,7 +135,6 @@ const App = () => {
               borderRadius: "8px",
               boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
               zIndex: 1001,
-              pointerEvents: "auto",
             }}
           >
             <h2>Welcome!</h2>
