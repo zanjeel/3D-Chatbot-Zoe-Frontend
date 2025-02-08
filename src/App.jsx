@@ -38,7 +38,7 @@ const App = () => {
 
     const audio = audioRef.current;
     audio.volume = 0; // Silent
-    audio.src = process.env.PUBLIC_URL + "/silent.mp3";
+    audio.src = "/silent.mp3";
     console.log("🎧 Audio source set:", audio.src);
 
     audio.play()
