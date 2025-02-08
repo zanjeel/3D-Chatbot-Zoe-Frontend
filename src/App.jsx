@@ -12,24 +12,22 @@ import { WavyBackground } from "./components/WavyBackground";
 const App = () => {
   // State to handle preloader visibility
   const [showPreloader, setShowPreloader] = useState(true);
+  // State to handle popup visibility after preloader
+  const [showPopup, setShowPopup] = useState(false);
   // State to toggle backgrounds
   const [isGradientBg, setIsGradientBg] = useState(true);
   // State to toggle dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
-  const audioRef = useRef(new Audio());
+
+  const audioRef = useRef(new Audio("/silence.mp3"));
 
   useEffect(() => {
-    const audio = audioRef.current;
-
     const unlockAudio = () => {
       console.log("👂 Unlocking audio...");
-      audio.volume = 0; // Silent
-      audio.src =  "/silence.mp3";
-      console.log("🎧 Audio source set:", audio.src);
+      const audio = audioRef.current;
+      audio.volume = 0;
       audio.play()
         .then(() => {
-          console.log("✅ Audio play triggered");
           localStorage.setItem("audioUnlocked", "true");
           console.log("🔓 Autoplay Unlocked!");
         })
@@ -37,33 +35,38 @@ const App = () => {
 
       window.removeEventListener("click", unlockAudio);
       window.removeEventListener("keydown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
     };
 
     if (!localStorage.getItem("audioUnlocked")) {
-      console.log("🔒 Waiting for user interaction to unlock audio...");
+      // console.log("🔒 Waiting for user interaction to unlock audio...");
       window.addEventListener("click", unlockAudio, { once: true });
       window.addEventListener("keydown", unlockAudio, { once: true });
-    }  else {
+      window.addEventListener("touchstart", unlockAudio, { once: true });
+    } else {
       console.log("🔓 Audio already unlocked, autoplay enabled.");
     }
-  }, [showPopup]);
-
+  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       setShowPreloader(false);
-    }, 5000);
-    return () => clearTimeout(timer);
+      if (!localStorage.getItem("audioUnlocked")) {
+        setShowPopup(true);
+      }
+    }, 2000);
   }, []);
 
   const toggleBackground = () => {
     setIsGradientBg(!isGradientBg);
   };
 
-   // Close the popup when user clicks 'OK'
-   const handlePopupClose = () => {
-    setShowPopup(false); // Close the popup
-    localStorage.setItem("audioUnlocked", "true"); // Unlock audio on popup close
+  const handlePopupClose = () => {
+    audio.volume = 0;
+    audioRef.current.play().catch(err => console.error("Playback error:", err));
+    audio.play().catch(err => console.error("Playback error:", err));
+    setShowPopup(false);
+    localStorage.setItem("audioUnlocked", "true");
   };
 
   return (
@@ -76,11 +79,11 @@ const App = () => {
       )}
 
       {/* Main content */}
-        <Leva hidden />
-        <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
-        <div  style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} >
-          <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
-        </div>
+      <Leva hidden />
+      <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
+      <div  style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} >
+        <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
+      </div>
 
       {/* Background component behind the canvas (ONLY HERE) */}
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -10, overflow: "hidden" }}>
@@ -88,7 +91,6 @@ const App = () => {
       </div>
 
       {/* Canvas overlaying the background */}
-      
       <Canvas
         shadows
         camera={{ position: [0, 0, 1], fov: 30 }}
@@ -104,29 +106,17 @@ const App = () => {
         <Experience  />
       </Canvas>
 
-       {/* Popup Modal */}
-       {showPopup && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-            zIndex: 1000,
-          }}
-        >
-          <h2>Welcome!</h2>
-          <p>We need your help to unlock audio playback.</p>
-          <button onClick={handlePopupClose} style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}>
-            OK
-          </button>
-        </div>
+      {/* Popup Modal */}
+      {showPopup && (
+        <>
+          <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000 }} />
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "white", padding: "20px", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)", zIndex: 1001 }}>
+            <h2>Welcome!</h2>
+            <p>We need your help to unlock audio playback.</p>
+            <button onClick={handlePopupClose} style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}>OK</button>
+          </div>
+        </>
       )}
-      
     </div>
   );
 };
