@@ -105,11 +105,8 @@ const corresponding = {
 };
 
 let setupMode = false;
-
-
 export function Model(props) {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
-
   const { message, onMessagePlayed, chat, userId } = useChat();
   const [lipsync, setLipsync] = useState();
   const audioRef = useRef(new Audio()); // Persistent Audio instance
@@ -120,6 +117,7 @@ export function Model(props) {
       setAnimation("Idle");
       return;
     }
+
     setAnimation(message.animation);
     setFacialExpression(message.facialExpression);
     setLipsync(message.lipsync);
@@ -129,36 +127,34 @@ export function Model(props) {
       { type: "audio/mp3" }
     );
     const audioURL = URL.createObjectURL(audioBlob);
+
     const audio = audioRef.current;
     audio.src = audioURL;
     audio.onended = onMessagePlayed;
 
-    // Play audio after first interaction
+    // Attempt to play immediately, handling user interaction
     const playAudio = async () => {
       try {
-        // Attempt to play the audio immediately
+        // Try playing audio immediately
         await audio.play();
-        localStorage.setItem("audioUnlocked", "true"); // Unlock audio on success
+        localStorage.setItem("audioUnlocked", "true"); // Save unlock state
       } catch (e) {
         console.warn("Autoplay blocked, waiting for user interaction");
 
-        // If autoplay is blocked, wait for user interaction
+        // Only listen for clicks if autoplay is blocked (for mobile devices)
         if (!localStorage.getItem("audioUnlocked")) {
-          const unlockAutoplay = async () => {
-            try {
-              await audio.play(); // Try playing again after first click
-              localStorage.setItem("audioUnlocked", "true"); // Unlock audio
-              window.removeEventListener("click", unlockAutoplay); // Remove listener after successful play
-            } catch (err) {
-              console.error("Playback error:", err);
-            }
+          const unlockAutoplay = () => {
+            audio.play().catch(err => console.error("Playback error:", err));
+            localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+            window.removeEventListener("click", unlockAutoplay);
           };
+          // Add a listener for a click event to unlock autoplay
           window.addEventListener("click", unlockAutoplay, { once: true });
         }
       }
     };
 
-    // Call playAudio to handle autoplay behavior
+    // Call the playAudio function to attempt audio playback
     playAudio();
   }, [message]);
 
@@ -166,7 +162,7 @@ export function Model(props) {
   const group = useRef();
   const { actions, mixer } = useAnimations(animations, group);
   const [animation, setAnimation] = useState(
-    animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name // Check if Idle animation exists otherwise use first animation
+    animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name
   );
 
   useEffect(() => {
@@ -177,7 +173,6 @@ export function Model(props) {
         .play();
     }
 
-    // Clean up when animation changes
     return () => {
       if (actions[animation]) {
         actions[animation].fadeOut(0.5);
@@ -185,6 +180,7 @@ export function Model(props) {
     };
   }, [animation, actions, mixer]);
 
+  // Morph Target logic for facial expressions
   const lerpMorphTarget = (target, value, speed = 0.1) => {
     scene.traverse((child) => {
       if (child.isSkinnedMesh && child.morphTargetDictionary) {
@@ -220,7 +216,7 @@ export function Model(props) {
 
   useFrame(() => {
     const appliedMorphTargets = []; // Define the array here
-  
+
     if (!setupMode) {
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         const mapping = facialExpressions[facialExpression];
@@ -233,16 +229,16 @@ export function Model(props) {
           lerpMorphTarget(key, 0, 0.1);
         }
       });
-  
+
       // Handle eye blink separately
       lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
       lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
-  
+
       // LIPSYNC logic
       if (!setupMode && message && lipsync && audioRef.current) {
         const audio = audioRef.current;
         const currentAudioTime = audio.currentTime;
-  
+
         if (currentAudioTime !== undefined) {
           for (let i = 0; i < lipsync.mouthCues.length; i++) {
             const mouthCue = lipsync.mouthCues[i];
@@ -257,7 +253,7 @@ export function Model(props) {
           }
         }
       }
-  
+
       // Reset other morph targets if not in the appliedMorphTargets list
       Object.values(corresponding).forEach((value) => {
         if (!appliedMorphTargets.includes(value)) {
@@ -266,6 +262,8 @@ export function Model(props) {
       });
     }
   });
+
+ 
   
 
   useControls("FacialExpressions", {
