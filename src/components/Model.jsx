@@ -105,6 +105,7 @@ const corresponding = {
 };
 
 let setupMode = false;
+
 export function Model(props) {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
   const { message, onMessagePlayed, chat, userId } = useChat();
@@ -118,8 +119,8 @@ export function Model(props) {
       return;
     }
 
-    setAnimation(message.animation);
-    setFacialExpression(message.facialExpression);
+    setAnimation(message.animation || "Idle");
+    setFacialExpression(message.facialExpression || "");
     setLipsync(message.lipsync);
 
     const audioBlob = new Blob(

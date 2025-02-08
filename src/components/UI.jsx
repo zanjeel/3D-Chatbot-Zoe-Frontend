@@ -6,6 +6,7 @@ export const UI = ({ hidden,  ...props }) => {
   const { chat, loading, setLoading, message, error, userId } = useChat();
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
@@ -21,11 +22,19 @@ export const UI = ({ hidden,  ...props }) => {
     }
   }, [error, userId]);
 
+  const handleUserInteraction = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      localStorage.setItem("audioUnlocked", "true"); // Set flag to enable autoplay for future messages
+    }
+  };
+
   const sendMessage = () => {
     const text = input.current.value;
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
       chat(text);  // Send message without passing userId, as it's handled in useChat
+      handleUserInteraction(); 
       input.current.value = "";
     }
   };
@@ -40,6 +49,7 @@ export const UI = ({ hidden,  ...props }) => {
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
       chat("", messageType);  // Send template message type
+      handleUserInteraction(); // Trigger interaction on template click
     }
   };
 
@@ -151,7 +161,10 @@ export const UI = ({ hidden,  ...props }) => {
     placeholder="Hey, what's up..."
     ref={input}
     onKeyDown={(e) => {
-      if (e.key === "Enter") sendMessage();
+      if (e.key === "Enter") {
+        sendMessage();
+        handleUserInteraction(); // Trigger interaction on typing
+      }
     }}
   />
 
