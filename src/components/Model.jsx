@@ -122,6 +122,8 @@ export function Model(props) {
     setAnimation(message.animation || "Idle");
     setFacialExpression(message.facialExpression || "");
     setLipsync(message.lipsync);
+    console.log("hasInteracted in Model:", hasInteracted);  // Log state value
+    console.log("Audio unlocked:", localStorage.getItem("audioUnlocked"));
 
      // Prepare and play audio if available
   if (message.audio) {
