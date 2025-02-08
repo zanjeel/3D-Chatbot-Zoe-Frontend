@@ -21,6 +21,18 @@ export const ChatProvider = ({ children }) => {
   const [error, setError] = useState({});
   const [queryCount, setQueryCount] = useState({});
 
+    // 🔹 Load initial interaction state from localStorage
+  const [hasInteracted, setHasInteracted] = useState(
+    localStorage.getItem("audioUnlocked") === "true"
+  );
+
+
+  useEffect(() => {
+    if (hasInteracted) {
+      localStorage.setItem("audioUnlocked", "true");
+    }
+  }, [hasInteracted]);
+
   // Get or generate the unique user ID (session ID)
   let userId = sessionStorage.getItem("userId");
   if (!userId) {
@@ -138,6 +150,8 @@ export const ChatProvider = ({ children }) => {
         setMessageType,
         error,
         userId,
+        hasInteracted,
+        setHasInteracted, // Make setHasInteracted accessible in UI.jsx
       }}
     >
       {children}

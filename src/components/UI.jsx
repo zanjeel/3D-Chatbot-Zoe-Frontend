@@ -3,10 +3,9 @@ import { useChat } from "../hooks/useChat";
 
 export const UI = ({ hidden,  ...props }) => {
   const input = useRef();
-  const { chat, loading, setLoading, message, error, userId } = useChat();
+  const { chat, loading, setLoading, message, error, userId, hasInteracted, setHasInteracted } = useChat();
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
@@ -34,7 +33,7 @@ export const UI = ({ hidden,  ...props }) => {
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
       handleUserInteraction(); 
-      chat(text);  // Send message without passing userId, as it's handled in useChat
+      chat(text, hasInteracted);  // Send message without passing userId, as it's handled in useChat
       input.current.value = "";
     }
   };
@@ -49,7 +48,7 @@ export const UI = ({ hidden,  ...props }) => {
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
       handleUserInteraction(); // Trigger interaction on template click
-      chat("", messageType);  // Send template message type
+      chat("", messageType, hasInteracted);  // Send template message type
      
     }
   };
