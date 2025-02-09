@@ -39,6 +39,7 @@ const App = () => {
       document.body.style.backgroundImage = "linear-gradient(0deg, #aaa7a7 40%, #463889 90%)";
     } else {
       document.body.style.backgroundImage = "black"; // Clear the background if not gradient
+      document.body.style.backgroundColor = "black"; // Or set a solid background color
     }
   }, [isGradientBg]); // This will run whenever isGradientBg changes
   
