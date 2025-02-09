@@ -52,13 +52,9 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       setShowPreloader(false);
-
-      // Ensure popup appears if audio isn't unlocked
-      if (!localStorage.getItem("audioUnlocked")) {
-        console.log("📢 Showing popup for audio permission");
-        setShowPopup(true);
-      }
-    }, 2000);
+      console.log(" Showing popup for audio permission");
+      setShowPopup(true);
+    }, 5000);
   }, []);
 
   const toggleBackground = () => {
