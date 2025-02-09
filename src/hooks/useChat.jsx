@@ -21,18 +21,32 @@ export const ChatProvider = ({ children }) => {
   const [error, setError] = useState({});
   const [queryCount, setQueryCount] = useState({});
 
-    // 🔹 Load initial interaction state from localStorage
-  const [hasInteracted, setHasInteracted] = useState(
-    localStorage.getItem("audioUnlocked") === "true"
-  );
 
+  //   // 🔹 Load initial interaction state from localStorage
+  // const [hasInteracted, setHasInteracted] = useState(
+  //   localStorage.getItem("audioUnlocked") === "true"
+  // );
+
+
+  // useEffect(() => {
+  //   if (hasInteracted) {
+  //     localStorage.setItem("audioUnlocked", "true");
+  //   }
+  // }, [hasInteracted]);
+
+
+  const [audioUnlocked, setAudioUnlocked] = useState(localStorage.getItem("audioUnlocked") === "true");
 
   useEffect(() => {
-    if (hasInteracted) {
-      localStorage.setItem("audioUnlocked", "true");
-    }
-  }, [hasInteracted]);
+    const handleStorageChange = () => {
+      setAudioUnlocked(localStorage.getItem("audioUnlocked") === "true");
+    };
+  
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
+  
   // Get or generate the unique user ID (session ID)
   let userId = sessionStorage.getItem("userId");
   if (!userId) {
@@ -150,8 +164,7 @@ export const ChatProvider = ({ children }) => {
         setMessageType,
         error,
         userId,
-        hasInteracted,
-        setHasInteracted, // Make setHasInteracted accessible in UI.jsx
+       audioUnlocked,
       }}
     >
       {children}
@@ -166,3 +179,11 @@ export const useChat = () => {
   }
   return context;
 };
+
+// export const useChat = () => {
+//   const { chat, message, onMessagePlayed, audioUnlocked } = useContext(ChatContext);
+//   if (!chat || !message || !onMessagePlayed) {
+//     throw new Error("useChat must be used within a ChatProvider");
+//   }
+//   return { chat, message, onMessagePlayed, audioUnlocked };
+// };

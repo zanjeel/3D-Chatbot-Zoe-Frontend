@@ -108,7 +108,7 @@ let setupMode = false;
 
 export function Model(props) {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
-  const { message, onMessagePlayed, chat, userId } = useChat();
+  const { message, onMessagePlayed, chat, audioUnlocked} = useChat();
   const [lipsync, setLipsync] = useState();
   const audioRef = useRef(null);
 
@@ -136,32 +136,33 @@ export function Model(props) {
     const audio = audioRef.current;
     audio.src = audioURL;
     audio.onended = onMessagePlayed;
-
-    // Attempt to play immediately, handling user interaction
     const playAudio = async () => {
       try {
-        // Try playing audio immediately
         await audio.play();
         localStorage.setItem("audioUnlocked", "true"); // Save unlock state
       } catch (e) {
         console.warn("Autoplay blocked, waiting for user interaction");
 
-        // Only listen for clicks if autoplay is blocked (for mobile devices)
-        if (!localStorage.getItem("audioUnlocked")) {
-          const unlockAutoplay = () => {
-            audio.play().catch(err => console.error("Playback error:", err));
-            localStorage.setItem("audioUnlocked", "true"); // Unlock audio
+        if (!audioUnlocked) {
+          const unlockAutoplay = async () => {
+            try {
+              await audio.play();
+              localStorage.setItem("audioUnlocked", "true");
+            } catch (err) {
+              console.error("Playback error:", err);
+            }
             window.removeEventListener("click", unlockAutoplay);
           };
-          // Add a listener for a click event to unlock autoplay
           window.addEventListener("click", unlockAutoplay, { once: true });
         }
       }
     };
-
-    // Call the playAudio function to attempt audio playback
-    playAudio();
-  }, [message]);
+    if (audioUnlocked) {
+      playAudio();
+    } else {
+      console.log("Waiting for user interaction to unlock audio");
+    }
+  }, [message, audioUnlocked]);
 
   const { animations } = useGLTF("/models/animations.glb");
   const group = useRef();

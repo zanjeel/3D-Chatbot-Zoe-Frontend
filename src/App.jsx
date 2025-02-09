@@ -108,8 +108,6 @@ const App = () => {
   };
 
   const handlePopupClose = () => {
-
-    const keepAlive=()=> {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -124,16 +122,11 @@ const App = () => {
         setShowPopup(false);
       })
       .catch(err => console.error("⚠️ Playback error:", err));
-    }
-    const interval = setInterval(keepAlive, 1000); // Play silent audio every 5 seconds
-
-  return () => clearInterval(interval); 
   };
 
   return (
-    <div className="overflow-hidden" 
-    style={{ position: "relative", height: "100vh", width: "100vw", 
-     
+    <div className="overflow-hidden h-full bg-cover bg-center" 
+    style={{ position: "relative", height: "100vh", width: "100vw",     
     }}
     >
       {/* Preloader */}
@@ -151,7 +144,7 @@ const App = () => {
       </div>
 
       {/* Background */}
-      <div style={{ position: "absolute",  width: "100%", height: "100%", zIndex: 20, overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0,  width: "100%", height: "100%", zIndex: 20, overflow: "hidden" }}>
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 

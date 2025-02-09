@@ -26,8 +26,11 @@ export const UI = ({ hidden,  ...props }) => {
     const text = input.current.value;
     if (!loading[userId] && !message) {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
+        // ✅ Set localStorage when user interacts
       chat(text);  // Send message without passing userId, as it's handled in useChat
       input.current.value = "";
+      localStorage.setItem("audioUnlocked", "true");
+      window.dispatchEvent(new Event("storage")); 
     }
   };
 
@@ -42,6 +45,8 @@ export const UI = ({ hidden,  ...props }) => {
       setLoading((prevState) => ({ ...prevState, [userId]: true }));
       chat("", messageType);  // Send template message type
       setIsChatVisible(true);
+      localStorage.setItem("audioUnlocked", "true");
+      window.dispatchEvent(new Event("storage")); 
     }
   };
 
