@@ -81,11 +81,19 @@ const App = () => {
 
   useEffect(() => {
     const keepAlive = () => {
-      if (audioContextRef.current?.state === "suspended") {
-        audioContextRef.current.resume().then(() => {
-          console.log("🔊 Audio context resumed (keep alive)");
-        });
-      }
+
+      const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.src = "/button-push.mp3"; // A 1-second silent audio file
+    audio.volume = 0.01; // Make it barely audible
+    audio.play().catch(err => console.warn("🔇 Keep-alive audio blocked:", err));
+
+      // if (audioContextRef.current?.state === "suspended") {
+      //   audioContextRef.current.resume().then(() => {
+      //     console.log("🔊 Audio context resumed (keep alive)");
+      //   });
+      // }
     };
 
     const interval = setInterval(keepAlive, 1000);
@@ -145,7 +153,7 @@ const App = () => {
       </div>
 
       {/* Background */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
+      <div style={{ position: "absolute",  width: "100%", height: "100%", zIndex: 20, overflow: "hidden" }}>
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 
@@ -159,7 +167,7 @@ const App = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           overflow: "hidden",
-          zIndex: -1,
+          zIndex: 30,
         }}
       >
         <Experience

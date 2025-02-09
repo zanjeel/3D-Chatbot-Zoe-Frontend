@@ -76,8 +76,8 @@ export const UI = ({ hidden,  ...props }) => {
 
       {/* Question mark button */}
       <div
-      className="absolute mt-2 top-10 right-10 md:right-20 md:top-14  lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
-      style={{ backgroundColor: "#1a1a1a", zIndex: 2147483647, pointerEvents: "auto" }}
+      className="absolute mt-2 z-50 top-10 right-10 md:right-20 md:top-14  lg:top-10 lg:right-24 xl:top-14 xl:right-28 cursor-pointer rounded-full"
+      style={{ backgroundColor: "#1a1a1a", pointerEvents: "auto" }}
       >
 
       {/* Button */}
