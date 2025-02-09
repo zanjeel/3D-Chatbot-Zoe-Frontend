@@ -40,7 +40,7 @@ const App = () => {
       if (!audio) return;
 
       // Replace silence with actual unmuted audio
-      audio.src = "/api.mp3"; // Replace with a real audio file
+      audio.src = "/button-push.mp3"; // Replace with a real audio file
       audio.volume = 1; // Unmute and set volume to max
       audio.play()
         .then(() => {
@@ -82,7 +82,7 @@ const App = () => {
     if (!audio) return;
 
     // Play audio only on user interaction
-    audio.src = "/api.mp3"; // Replace with a real audio file
+    audio.src = "/button-push.mp3"; // Replace with a real audio file
     audio.volume = 1; // Unmute and set volume to max
 
     audio.play()
@@ -98,16 +98,16 @@ const App = () => {
     <div className="overflow-hidden" style={{ position: "relative", height: "100vh", width: "100vw" }}>
       {/* Preloader */}
       {showPreloader && (
-        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 100 }}>
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10000000000 }}>
           <Preloader />
         </div>
       )}
 
       {/* UI Components */}
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 50 }}>
       <Leva hidden />
-      <UI style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }} />
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 5 }}>
-        <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
+      <UI  />
+      <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
       </div>
 
       {/* Background */}
