@@ -87,7 +87,7 @@ const App = () => {
 
   const toggleBackground = () => {
     setIsGradientBg(!isGradientBg);
-    setDotColor(isGradientBg ? "white" : "black");
+    setDotColor(isGradientBg ? "black" : "white");
   };
 
   const handlePopupClose = () => {
@@ -146,7 +146,7 @@ const App = () => {
         }}
       >
         <Experience
-          dotColor={dotColor} 
+          dotColor={isGradientBg ? "black" : "white"}
           shadows
           style={{
             overflow: "hidden",
