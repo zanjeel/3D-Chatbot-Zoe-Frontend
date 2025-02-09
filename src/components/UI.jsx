@@ -151,7 +151,7 @@ export const UI = ({ hidden,  ...props }) => {
   ))}
 </div>
 
-{isChatVisible && (
+{/* {isChatVisible && ( */}
     <div className="mb-2 md:mb-0 absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-2  p-1   bg-[#1a1a1a] rounded-full shadow-lg border border-[#333] pointer-events-auto w-[90%] max-w-[800px]">
 
   {/* Input Field */}
@@ -181,7 +181,7 @@ export const UI = ({ hidden,  ...props }) => {
     </span>
   </button>
 </div>
-)}
+{/* )} */}
     </div>
 
     </>
