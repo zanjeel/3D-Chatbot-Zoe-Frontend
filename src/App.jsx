@@ -87,7 +87,7 @@ const App = () => {
 
   const toggleBackground = () => {
     setIsGradientBg(!isGradientBg);
-    setDotColor(isGradientBg ? "black" : "white");
+    setDotColor(isGradientBg ? "white" : "black");
   };
 
   const handlePopupClose = () => {
