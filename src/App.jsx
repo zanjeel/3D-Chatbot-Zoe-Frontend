@@ -81,19 +81,11 @@ const App = () => {
 
   useEffect(() => {
     const keepAlive = () => {
-
-      const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.src = "/button-push.mp3"; // A 1-second silent audio file
-    audio.volume = 0.01; // Make it barely audible
-    audio.play().catch(err => console.warn("🔇 Keep-alive audio blocked:", err));
-
-      // if (audioContextRef.current?.state === "suspended") {
-      //   audioContextRef.current.resume().then(() => {
-      //     console.log("🔊 Audio context resumed (keep alive)");
-      //   });
-      // }
+      if (audioContextRef.current?.state === "suspended") {
+        audioContextRef.current.resume().then(() => {
+          console.log("🔊 Audio context resumed (keep alive)");
+        });
+      }
     };
 
     const interval = setInterval(keepAlive, 1000);
@@ -116,6 +108,8 @@ const App = () => {
   };
 
   const handlePopupClose = () => {
+
+    const keepAlive=()=> {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -130,6 +124,10 @@ const App = () => {
         setShowPopup(false);
       })
       .catch(err => console.error("⚠️ Playback error:", err));
+    }
+    const interval = setInterval(keepAlive, 1000); // Play silent audio every 5 seconds
+
+  return () => clearInterval(interval); 
   };
 
   return (
