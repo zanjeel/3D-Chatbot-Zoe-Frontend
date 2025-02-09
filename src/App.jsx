@@ -16,6 +16,8 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const audioRef = useRef(null);
+  const audioContextRef = useRef(null);
+
   const [dotColor, setDotColor]= useState("black");
 
   useEffect(() => {
@@ -25,9 +27,6 @@ const App = () => {
     };
     
     disableScroll(); // Disable scroll when the app loads
-
-    // Optionally, enable scroll later, e.g., on a button click or after an event
-    // enableScroll();
 
     return () => {
       document.body.style.overflow = ""; // Cleanup when component is unmounted
@@ -46,6 +45,9 @@ const App = () => {
   
 
   useEffect(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
     const unlockAudio = () => {
       console.log("👂 Unlocking audio...");
       const audio = audioRef.current;
@@ -78,12 +80,27 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const keepAlive = () => {
+      if (audioContextRef.current?.state === "suspended") {
+        audioContextRef.current.resume().then(() => {
+          console.log("🔊 Audio context resumed (keep alive)");
+        });
+      }
+    };
+
+    const interval = setInterval(keepAlive, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+
+  useEffect(() => {
     setTimeout(() => {
       setShowPreloader(false);
       console.log(" Showing popup for audio permission");
       setShowPopup(true);
     }, 5000);
   }, []);
+
 
   const toggleBackground = () => {
     setIsGradientBg(!isGradientBg);
