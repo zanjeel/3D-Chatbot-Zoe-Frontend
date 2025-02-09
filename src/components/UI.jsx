@@ -69,7 +69,7 @@ export const UI = ({ hidden,  ...props }) => {
                    hover:scale-110 hover:shadow-lg rounded-full"
       />
       <span className="md:ml-5  mt-1 ml-3 font-sans font-extrabold text-white text-2xl md:text-3xl ">
-        Zoe AI
+        Zeej AI
       </span>
      </div>
   
@@ -100,7 +100,7 @@ export const UI = ({ hidden,  ...props }) => {
             backgroundColor: "#1a1a1a",
           }}
         >
-          <p>You can talk to Zoe about anything, she gives the best advice!</p>
+          <p>You can talk to Zeej about anything, she gives the best advice!</p>
         </div>
       )}
     </div>

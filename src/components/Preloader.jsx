@@ -46,7 +46,7 @@ const Preloader = () => {
           ref={logoNameRef}
           className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide sm:tracking-widest uppercase font-bold px-4 text-center"
         >
-        Zoe AI
+        Zeej Ai
         </div>
       </div>
 
