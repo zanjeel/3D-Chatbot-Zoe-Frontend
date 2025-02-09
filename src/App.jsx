@@ -53,7 +53,7 @@ const App = () => {
       if (!audio) return;
 
       // Replace silence with actual unmuted audio
-      audio.src = "/api_0.mp3"; // Replace with a real audio file
+      audio.src = "button_push.mp3"; // Replace with a real audio file
       audio.volume = 1; // Unmute and set volume to max
       audio.play()
         .then(() => {
@@ -111,7 +111,7 @@ const App = () => {
     if (!audio) return;
 
     // Play audio only on user interaction
-    audio.src = "/api_0.mp3"; // Replace with a real audio file
+    audio.src = "/button-push.mp3"; // Replace with a real audio file
     audio.volume = 1; // Unmute and set volume to max
 
     audio.play()
@@ -143,7 +143,8 @@ const App = () => {
       </div>
 
       {/* Background */}
-      <div style={{ position: "absolute", top: 0,  width: "100%", height: "100%", zIndex: 20, overflow: "hidden" }}>
+      <div style={{ position: "fixed", top: 0, left:0,    width: "100vw", 
+        height: "100vh",zIndex: 20, overflow: "hidden" }}>
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 
