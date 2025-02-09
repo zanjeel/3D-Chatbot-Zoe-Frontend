@@ -16,6 +16,7 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const audioRef = useRef(null);
+  const [dotColor, setDotColor]= useState("black");
 
   useEffect(() => {
     // Disable scroll on mount
@@ -86,6 +87,7 @@ const App = () => {
 
   const toggleBackground = () => {
     setIsGradientBg(!isGradientBg);
+    setDotColor(isGradientBg ? "black" : "white");
   };
 
   const handlePopupClose = () => {
@@ -144,6 +146,7 @@ const App = () => {
         }}
       >
         <Experience
+          dotColor={dotColor} 
           shadows
           style={{
             overflow: "hidden",

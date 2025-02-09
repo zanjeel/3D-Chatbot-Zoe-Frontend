@@ -11,9 +11,10 @@ import { useChat } from "../hooks/useChat";
 import { Model } from "./Model";
 import { ClipLoader } from 'react-spinners';
 
-const Dots = (props) => {
+const Dots = ({dotColor, ...props}) => {
   const { loading, userId } = useChat();
   const [loadingText, setLoadingText] = useState("");
+
   useEffect(() => {
     if (loading[userId]) {
       const interval = setInterval(() => {
@@ -35,13 +36,13 @@ const Dots = (props) => {
     <group {...props}>
       <Text fontSize={0.14} anchorX={"left"} anchorY={"bottom"}>
         {loadingText}
-        <meshBasicMaterial attach="material" color="black" />
+        <meshBasicMaterial attach="material" color={dotColor} />
       </Text>
     </group>
   );
 };
 
-export const Experience = () => {
+export const Experience = ({dotColor}) => {
   const cameraControls = useRef();
   const { cameraZoomed } = useChat();
 
@@ -60,7 +61,6 @@ export const Experience = () => {
     }
   }, [cameraZoomed]);
 
-
   return (
     <>
       <CameraControls ref={cameraControls}
@@ -77,7 +77,7 @@ export const Experience = () => {
 
       {/* Wrapping Dots into Suspense to prevent Blink when Troika/Font is loaded */}
       <Suspense>
-        <Dots position-y={1.75} position-x={-0.02} />
+        <Dots position-y={1.75} position-x={-0.02} dotColor={dotColor} />
       </Suspense>
       <Sparkles count={1000} size={10} position={[-10, 1, 0]} scale={[100,100,100]} speed={0.9} />
       <Model />
