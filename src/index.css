@@ -10,13 +10,14 @@
 #root {
   width: 100vw;
   height: 100vh;
+  
 }
 
 body {
   height: 100vh;
   margin: 0;
   background-color: black;
-  background-image: linear-gradient(0deg, #aaa7a7 40%, #463889 90%); 
+  
 }
 /* .startingbody{
    background-image: linear-gradient(0deg, #aaa7a7 40%, #463889 90%); 

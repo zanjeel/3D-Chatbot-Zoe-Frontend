@@ -34,6 +34,16 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    // Change background based on the isGradientBg state
+    if (isGradientBg) {
+      document.body.style.backgroundImage = "linear-gradient(0deg, #aaa7a7 40%, #463889 90%)";
+    } else {
+      document.body.style.backgroundImage = "black"; // Clear the background if not gradient
+    }
+  }, [isGradientBg]); // This will run whenever isGradientBg changes
+  
+
+  useEffect(() => {
     const unlockAudio = () => {
       console.log("👂 Unlocking audio...");
       const audio = audioRef.current;
@@ -95,7 +105,11 @@ const App = () => {
   };
 
   return (
-    <div className="overflow-hidden" style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div className="overflow-hidden" 
+    style={{ position: "relative", height: "100vh", width: "100vw", 
+     
+    }}
+    >
       {/* Preloader */}
       {showPreloader && (
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10000000000 }}>
@@ -106,12 +120,12 @@ const App = () => {
       {/* UI Components */}
       <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 50 }}>
       <Leva hidden />
-      <UI  />
+      <UI  /> 
       <ButtonMain isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} onToggleBackground={toggleBackground} />
       </div>
 
       {/* Background */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -10, overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 
@@ -163,11 +177,21 @@ const App = () => {
               boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
               zIndex: 1001,
               pointerEvents: "auto",
+              display: "flex",               // Add flexbox to center content
+              flexDirection: "column",       // Stack items vertically
+              justifyContent: "center",     // Vertically center content
+              alignItems: "center",         // Horizontally center content
+              textAlign: "center",  
             }}
           >
-            <h2>Welcome!</h2>
-            <p>We need your help to unlock audio playback.</p>
-            <button onClick={handlePopupClose} style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}>
+            <p className="items-center justify-center mb-4">Click To Allow Audio</p>
+            <button onClick={handlePopupClose} 
+            className="rounded-lg bg-black text-white items-center justify-center"
+            style=
+            {{ padding: "10px 20px", 
+            fontSize: "16px",
+            cursor: "pointer" 
+            }}>
               OK
             </button>
           </div>
