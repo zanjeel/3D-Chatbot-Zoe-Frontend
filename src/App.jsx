@@ -38,7 +38,7 @@ const App = () => {
     if (isGradientBg) {
       document.body.style.backgroundImage = "linear-gradient(0deg, #aaa7a7 40%, #463889 90%)";
     } else {
-      document.body.style.backgroundColor = "black"; // Or set a solid background color
+      document.body.style.backgroundColor = "black";
     }
   }, [isGradientBg]); // This will run whenever isGradientBg changes
   
@@ -130,7 +130,7 @@ const App = () => {
     >
       {/* Preloader */}
       {showPreloader && (
-        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10000000000 }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10000000000 }}>
           <Preloader />
         </div>
       )}
@@ -144,7 +144,9 @@ const App = () => {
 
       {/* Background */}
       <div style={{ position: "fixed", top: 0, left:0,    width: "100vw", 
-        height: "100vh",zIndex: 20, overflow: "hidden" }}>
+        height: "100vh",zIndex: 20, overflow: "hidden" }}
+        className="overflow-hidden h-full bg-cover bg-center">
+       
         {isGradientBg ? <BackgroundGradientAnimation /> : <WavyBackground />}
       </div>
 
