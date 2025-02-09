@@ -52,7 +52,7 @@ const App = () => {
       if (!audio) return;
 
       // Replace silence with actual unmuted audio
-      audio.src = "/api_0.mp3"; // Replace with a real audio file
+      audio.src = "/button-push.mp3"; // Replace with a real audio file
       audio.volume = 1; // Unmute and set volume to max
       audio.play()
         .then(() => {
@@ -95,7 +95,7 @@ const App = () => {
     if (!audio) return;
 
     // Play audio only on user interaction
-    audio.src = "/api_0.mp3"; // Replace with a real audio file
+    audio.src = "/button-push.mp3"; // Replace with a real audio file
     audio.volume = 1; // Unmute and set volume to max
 
     audio.play()
