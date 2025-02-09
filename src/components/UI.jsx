@@ -31,6 +31,7 @@ export const UI = ({ hidden,  ...props }) => {
       input.current.value = "";
       localStorage.setItem("audioUnlocked", "true");
       window.dispatchEvent(new Event("storage")); 
+      console.log("localstorage set to true on button click")
     }
   };
 
@@ -47,6 +48,7 @@ export const UI = ({ hidden,  ...props }) => {
       setIsChatVisible(true);
       localStorage.setItem("audioUnlocked", "true");
       window.dispatchEvent(new Event("storage")); 
+      console.log("localstorage set to true on button click")
     }
   };
 

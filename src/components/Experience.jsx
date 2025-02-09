@@ -8,7 +8,7 @@ import {
 } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import { Model } from "./Model";
+import  Model  from "./Model";
 import { ClipLoader } from 'react-spinners';
 
 const Dots = ({dotColor, ...props}) => {
@@ -42,7 +42,7 @@ const Dots = ({dotColor, ...props}) => {
   );
 };
 
-export const Experience = ({dotColor}) => {
+export const Experience = ({dotColor, audioRef}) => {
   const cameraControls = useRef();
   const { cameraZoomed } = useChat();
 
@@ -80,7 +80,7 @@ export const Experience = ({dotColor}) => {
         <Dots position-y={1.75} position-x={-0.02} dotColor={dotColor} />
       </Suspense>
       <Sparkles count={1000} size={10} position={[-10, 1, 0]} scale={[100,100,100]} speed={0.9} />
-      <Model />
+      <Model audioRef={audioRef}/>
       <ContactShadows opacity={0.7} />
     </>
   );

@@ -8,13 +8,13 @@ import ButtonMain from "./components/ButtonMain";
 import Preloader from "./components/Preloader";
 import { BackgroundGradientAnimation } from "./components/BackgroundGradientAnimation";
 import { WavyBackground } from "./components/WavyBackground";
+import { useChat } from "./hooks/useChat";
 
 const App = () => {
   const [showPreloader, setShowPreloader] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [isGradientBg, setIsGradientBg] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
 
@@ -38,7 +38,6 @@ const App = () => {
     if (isGradientBg) {
       document.body.style.backgroundImage = "linear-gradient(0deg, #aaa7a7 40%, #463889 90%)";
     } else {
-      document.body.style.backgroundImage = "black"; // Clear the background if not gradient
       document.body.style.backgroundColor = "black"; // Or set a solid background color
     }
   }, [isGradientBg]); // This will run whenever isGradientBg changes
@@ -79,6 +78,7 @@ const App = () => {
     }
   }, []);
 
+
   useEffect(() => {
     const keepAlive = () => {
       if (audioContextRef.current?.state === "suspended") {
@@ -87,7 +87,6 @@ const App = () => {
         });
       }
     };
-
     const interval = setInterval(keepAlive, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -163,6 +162,7 @@ const App = () => {
       >
         <Experience
           dotColor={isGradientBg ? "black" : "white"}
+          audioRef= {audioRef}
           shadows
           style={{
             overflow: "hidden",

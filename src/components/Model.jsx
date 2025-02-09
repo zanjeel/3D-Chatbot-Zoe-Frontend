@@ -106,18 +106,25 @@ const corresponding = {
 
 let setupMode = false;
 
-export function Model(props) {
+const Model= ({audioRef}) => {
   const { nodes, materials, scene } = useGLTF("/models/model.glb");
   const { message, onMessagePlayed, chat, audioUnlocked} = useChat();
   const [lipsync, setLipsync] = useState();
-  const audioRef = useRef(null);
+  // const audioRef = useRef(null);
 
   useEffect(() => {
 
     if (!audioRef.current) {
-      audioRef.current = new Audio(); // Create audio instance once
+      // audioRef.current = new Audio(); // Create audio instance once
+      return;
     }
-    console.log(message);
+
+    //  // Initialize AudioContext once
+    //  if (!audioContextRef.current) {
+    //   audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    // }
+
+    // console.log(message);
     if (!message) {
       setAnimation("Idle");
       return;
@@ -144,6 +151,7 @@ export function Model(props) {
         console.warn("Autoplay blocked, waiting for user interaction");
 
         if (!audioUnlocked) {
+          console.log("audio not unlocked)")
           const unlockAutoplay = async () => {
             try {
               await audio.play();
@@ -158,11 +166,12 @@ export function Model(props) {
       }
     };
     if (audioUnlocked) {
+      console.log("audio unlocked)")
       playAudio();
     } else {
       console.log("Waiting for user interaction to unlock audio");
     }
-  }, [message, audioUnlocked]);
+  }, [message, audioUnlocked, audioRef]);
 
   const { animations } = useGLTF("/models/animations.glb");
   const group = useRef();
@@ -354,7 +363,7 @@ export function Model(props) {
   }, []);
 
   return (
-    <group {...props} ref={group} dispose={null}>
+    <group  ref={group} dispose={null}>
       <primitive object={nodes.Hips} />
       <skinnedMesh 
       name="Wolf3D_Hair"
@@ -426,3 +435,4 @@ export function Model(props) {
 
 useGLTF.preload('/models/model.glb')
 useGLTF.preload("/models/animations.glb");
+export default Model;

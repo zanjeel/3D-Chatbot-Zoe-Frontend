@@ -27,13 +27,13 @@ export const ChatProvider = ({ children }) => {
   //   localStorage.getItem("audioUnlocked") === "true"
   // );
 
+  
 
   // useEffect(() => {
   //   if (hasInteracted) {
   //     localStorage.setItem("audioUnlocked", "true");
   //   }
   // }, [hasInteracted]);
-
 
   const [audioUnlocked, setAudioUnlocked] = useState(localStorage.getItem("audioUnlocked") === "true");
 
@@ -46,7 +46,8 @@ export const ChatProvider = ({ children }) => {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  
+
+
   // Get or generate the unique user ID (session ID)
   let userId = sessionStorage.getItem("userId");
   if (!userId) {
@@ -77,6 +78,9 @@ export const ChatProvider = ({ children }) => {
   }, [userId]);
 
   const chat = async (message,  messageType = null) => {
+    
+ 
+  
 
     if (loading[userId]) return;
     
