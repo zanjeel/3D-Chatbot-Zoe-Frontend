@@ -18,6 +18,22 @@ const App = () => {
   const audioRef = useRef(null);
 
   useEffect(() => {
+    // Disable scroll on mount
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
+    
+    disableScroll(); // Disable scroll when the app loads
+
+    // Optionally, enable scroll later, e.g., on a button click or after an event
+    // enableScroll();
+
+    return () => {
+      document.body.style.overflow = ""; // Cleanup when component is unmounted
+    };
+  }, []);
+
+  useEffect(() => {
     const unlockAudio = () => {
       console.log("👂 Unlocking audio...");
       const audio = audioRef.current;
@@ -112,7 +128,11 @@ const App = () => {
           zIndex: -1,
         }}
       >
-        <Experience />
+        <Experience
+          shadows
+          style={{
+            overflow: "hidden",
+          }} />
       </Canvas>
 
       {/* Audio Unlock Popup */}
