@@ -51,7 +51,7 @@ export const UI = ({ hidden,  ...props }) => {
   >
     {/* Announcement Bar */}
     <div className="flex justify-center items-center py-3 bg-black text-white text-sm gap-3">
-     <p>&copy; 2025 Zoe AI. All Rights Reserved.</p>
+     <p>&copy; 2025 Zeej AI. All Rights Reserved.</p>
       <div className="inline-flex gap-1 items-center">
         <p className="text-white/60 hidden md:block">Gemini Flash 1.5 x Amazon Polly</p>
         {/* <ArrowRight className="h-4 w-4 inline-flex justify-center items-center" /> */}
@@ -144,7 +144,7 @@ export const UI = ({ hidden,  ...props }) => {
   ))}
 </div>
 
-{/* {isChatVisible && ( */}
+{isChatVisible && (
     <div className="mb-2 md:mb-0 absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-2  p-1   bg-[#1a1a1a] rounded-full shadow-lg border border-[#333] pointer-events-auto w-[90%] max-w-[800px]">
 
   {/* Input Field */}
@@ -174,7 +174,7 @@ export const UI = ({ hidden,  ...props }) => {
     </span>
   </button>
 </div>
-{/* )} */}
+)}
     </div>
 
     </>
